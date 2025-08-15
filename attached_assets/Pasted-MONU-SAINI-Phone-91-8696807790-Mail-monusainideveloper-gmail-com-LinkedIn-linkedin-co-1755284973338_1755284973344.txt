@@ -1,0 +1,58 @@
+MONU SAINI 
+Phone +91 8696807790   |   Mail monusainideveloper@gmail.com   |   LinkedIn linkedin.com/in/monupydev 
+ 
+ 
+Python Developer with 2 years of freelancing experience delivering automation tools, data-driven 
+solutions, and web applications for clients worldwide. Proficient in Python, SQL, and full-stack 
+development with expertise in automation, AI/ML integration and AI agent creation using n8n. Strong 
+problem-solver with a track record of providing efficient and scalable tech solutions. 
+ 
+ 
+PROFESSIONAL EXPERIENCE 
+ 
+ 
+Python Developer – Freelance (Remote) 
+Self-Employed | July 2023 – Present 
+• Built and deployed Python-based automation, data analysis, and web apps for global clients. 
+• Designed REST API integrations, AI/ML features, and automated solution with python tools. 
+• Delivered solutions in Python, Django, Flask and SQL with 100% client satisfaction. 
+Key Projects: 
+• Sales Prediction System Using Python Built a Python (Pandas, NumPy, Openpyxl) tool to predict 
+sales and auto-adjust forecasts from past data, improving business forecasting accuracy. 
+• Marketing Website for Optimiseres.com – Developed a responsive marketing company website 
+using Python (Flask) and frontend technologies (HTML, CSS, JS, Bootstrap); delivered high 
+client satisfaction. 
+ 
+ 
+EDUCATION QUALIFICATION 
+ 
+Abdul Kalam Technical University, Uttar Pradesh – MCA (May 2025) 
+CGPA: 7.5 | Relevant coursework: C/C++ Programming Fundamentals, DBMS, OOPs, Python, VS Code 
+Programming, Data Structures & Algorithms, SQL, Firebase, React, Docker, AI/ML Integration, Colab. 
+ 
+Rajasthan University, Rajasthan – BCA (July 2023) 
+CGPA: 7.5 | Relevant Coursework: Python, DBMS, SQL 
+ 
+Board of Secondary Education Rajasthan (BSER) – 12th (July 2020) 
+Percentage: 77% 
+ 
+ACADEMIC PROJECTS 
+ 
+1. Web Security Enhancement Tool – Browser extension to detect and block deceptive UI patterns. 
+2. AI-Based News Verification System – ML-based fake news detection with real-time fact-checking. 
+3. Automated News Aggregation Platform – News fetching, categorization, and display system. 
+4. Multi-Account Automation Tool – Python-based automation for multi-user account management. 
+ 
+SKILLS & CERTIFICATIONS 
+ 
+ 
+Technical Skills: Python, SQL, Django, Flask, React, HTML, CSS, JavaScript, Bootstrap, Firebase, Docker, 
+Excel, Data Visualization, Web Scraping, JSON, API, Automation, Web Extensions, UI/UX, AI/ML 
+Integration and Ai Agents with n8n workflows. 
+Non-Technical Skills: Communication, Teamwork, Time Management, Critical Thinking, Attention to 
+Detail, Adaptability, Creativity. 
+Certifications: 
+• Python for Beginners & Intermediate Python – SoloLearn 
+• Python, SQL – HackerRank 
+• Google Data Analytics – Coursera  
+• Start Cyber Secure User – IANT        View Portfolio 
