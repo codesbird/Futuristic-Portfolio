@@ -7,8 +7,7 @@ import speakeasy from "speakeasy";
 import QRCode from "qrcode";
 import { storage } from "./storage";
 import { User, loginUserSchema, insertUserSchema } from "@shared/schema";
-import ConnectPgSimple from "connect-pg-simple";
-import { db } from "./storage";
+import MemoryStore from "memorystore";
 
 declare global {
   namespace Express {
@@ -16,7 +15,7 @@ declare global {
   }
 }
 
-const PgSession = ConnectPgSimple(session);
+const MemStore = MemoryStore(session);
 
 async function hashPassword(password: string): Promise<string> {
   return await bcrypt.hash(password, 12);
@@ -27,17 +26,16 @@ async function comparePasswords(supplied: string, stored: string): Promise<boole
 }
 
 export function setupAuth(app: Express) {
+  // Use in-memory session store since we're using in-memory storage
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || "your-secret-key",
+    secret: process.env.SESSION_SECRET || "tech2saini-secret-key",
     resave: false,
     saveUninitialized: false,
-    store: new PgSession({
-      pool: db as any,
-      tableName: "session",
-      createTableIfMissing: true,
+    store: new MemStore({
+      checkPeriod: 86400000, // prune expired entries every 24h
     }),
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: false, // Set to false for development
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
