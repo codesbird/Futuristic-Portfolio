@@ -1,7 +1,22 @@
+import { useQuery } from "@tanstack/react-query";
 import ServiceCard from "./service-card";
-import { SERVICES } from "@/lib/constants";
+import type { Service } from "@shared/schema";
 
 export default function ServicesSection() {
+  const { data: services = [], isLoading } = useQuery<Service[]>({
+    queryKey: ["/api/services"],
+  });
+
+  if (isLoading) {
+    return (
+      <section id="services" className="py-20 bg-dark-secondary relative">
+        <div className="container mx-auto px-6 text-center">
+          <div className="text-white">Loading services...</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="services" className="py-20 bg-dark-secondary relative">
       <div className="container mx-auto px-6">
@@ -16,8 +31,8 @@ export default function ServicesSection() {
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {SERVICES.map((service, index) => (
-            <ServiceCard key={service.title} service={service} index={index} />
+          {services.map((service, index) => (
+            <ServiceCard key={service.id} service={service} index={index} />
           ))}
         </div>
       </div>

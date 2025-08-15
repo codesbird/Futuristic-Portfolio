@@ -38,7 +38,7 @@ export function SkillsList() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest(`/api/skills/${id}`, "DELETE"),
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/skills/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/skills"] });
       toast({ title: "Skill deleted successfully!" });
@@ -85,11 +85,12 @@ export function SkillsList() {
                         onClick={() => setEditingSkill(skill)}
                         className="border-gray-600 text-gray-300 hover:bg-gray-700"
                       >
-                        <Edit size={14} />
+                        <Edit size={12} />
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
                       <AdminSkillForm 
+                        skill={editingSkill}
                         onClose={() => setEditingSkill(null)} 
                       />
                     </DialogContent>
@@ -101,7 +102,7 @@ export function SkillsList() {
                     disabled={deleteMutation.isPending}
                     className="border-red-600 text-red-400 hover:bg-red-900"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={12} />
                   </Button>
                 </div>
               </div>
@@ -137,7 +138,7 @@ export function ServicesList() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest(`/api/services/${id}`, "DELETE"),
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/services/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/services"] });
       toast({ title: "Service deleted successfully!" });
@@ -187,12 +188,12 @@ export function ServicesList() {
                         onClick={() => setEditingService(service)}
                         className="border-gray-600 text-gray-300 hover:bg-gray-700"
                       >
-                        <Edit size={14} />
+                        <Edit size={12} />
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                       <AdminServiceForm 
-                        service={editingService!} 
+                        service={editingService}
                         onClose={() => setEditingService(null)} 
                       />
                     </DialogContent>
@@ -204,7 +205,7 @@ export function ServicesList() {
                     disabled={deleteMutation.isPending}
                     className="border-red-600 text-red-400 hover:bg-red-900"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={12} />
                   </Button>
                 </div>
               </div>
@@ -237,7 +238,7 @@ export function ProjectsList() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest(`/api/projects/${id}`, "DELETE"),
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/projects/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
       toast({ title: "Project deleted successfully!" });
@@ -286,11 +287,12 @@ export function ProjectsList() {
                         onClick={() => setEditingProject(project)}
                         className="border-gray-600 text-gray-300 hover:bg-gray-700"
                       >
-                        <Edit size={14} />
+                        <Edit size={12} />
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                       <AdminProjectForm 
+                        project={editingProject}
                         onClose={() => setEditingProject(null)} 
                       />
                     </DialogContent>
@@ -302,7 +304,7 @@ export function ProjectsList() {
                     disabled={deleteMutation.isPending}
                     className="border-red-600 text-red-400 hover:bg-red-900"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={12} />
                   </Button>
                 </div>
               </div>
@@ -371,7 +373,7 @@ export function BlogPostsList() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest(`/api/blog-posts/${id}`, "DELETE"),
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/blog-posts/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/blog-posts"] });
       toast({ title: "Blog post deleted successfully!" });
@@ -427,12 +429,12 @@ export function BlogPostsList() {
                         onClick={() => setEditingPost(post)}
                         className="border-gray-600 text-gray-300 hover:bg-gray-700"
                       >
-                        <Edit size={14} />
+                        <Edit size={12} />
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                       <AdminBlogForm 
-                        blogPost={editingPost!} 
+                        blogPost={editingPost}
                         onClose={() => setEditingPost(null)} 
                       />
                     </DialogContent>
@@ -444,7 +446,7 @@ export function BlogPostsList() {
                     disabled={deleteMutation.isPending}
                     className="border-red-600 text-red-400 hover:bg-red-900"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={12} />
                   </Button>
                 </div>
               </div>

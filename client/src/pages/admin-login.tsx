@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,12 +13,7 @@ export default function AdminLogin() {
   const [, setLocation] = useLocation();
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-
-  if (user) {
-    setLocation("/admin");
-    return null;
-  }
-
+  
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
@@ -31,6 +26,12 @@ export default function AdminLogin() {
     password: "",
     confirmPassword: "",
   });
+
+  useEffect(() => {
+    if (user) {
+      setLocation("/admin");
+    }
+  }, [user, setLocation]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

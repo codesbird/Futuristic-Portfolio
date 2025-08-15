@@ -1,7 +1,22 @@
+import { useQuery } from "@tanstack/react-query";
 import ProjectCard from "./project-card";
-import { PROJECTS } from "@/lib/constants";
+import type { Project } from "@shared/schema";
 
 export default function PortfolioSection() {
+  const { data: projects = [], isLoading } = useQuery<Project[]>({
+    queryKey: ["/api/projects"],
+  });
+
+  if (isLoading) {
+    return (
+      <section id="portfolio" className="py-20 relative">
+        <div className="container mx-auto px-6 text-center">
+          <div className="text-white">Loading projects...</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="portfolio" className="py-20 relative">
       {/* Background */}
@@ -25,8 +40,8 @@ export default function PortfolioSection() {
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {PROJECTS.map((project, index) => (
-            <ProjectCard key={project.title} project={project} index={index} />
+          {projects.filter(p => p.featured).map((project, index) => (
+            <ProjectCard key={project.id} project={project} index={index} />
           ))}
         </div>
       </div>

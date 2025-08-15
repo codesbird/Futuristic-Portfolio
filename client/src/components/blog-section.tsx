@@ -1,7 +1,24 @@
+import { useQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
-import { BLOG_POSTS } from "@/lib/constants";
+import type { BlogPost } from "@shared/schema";
+import { format } from "date-fns";
 
 export default function BlogSection() {
+  const { data: blogPosts = [], isLoading } = useQuery<BlogPost[]>({
+    queryKey: ["/api/blog-posts"],
+    queryFn: () => fetch("/api/blog-posts?published=true").then(res => res.json()),
+  });
+
+  if (isLoading) {
+    return (
+      <section className="py-20 relative">
+        <div className="container mx-auto px-6 text-center">
+          <div className="text-white">Loading blog posts...</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-20 relative">
       <div className="container mx-auto px-6">
@@ -15,13 +32,13 @@ export default function BlogSection() {
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {BLOG_POSTS.map((post, index) => (
+          {blogPosts.slice(0, 3).map((post, index) => (
             <div 
-              key={index}
+              key={post.id}
               className="glass-morphism rounded-xl overflow-hidden group hover:scale-105 transition-all duration-300"
             >
               <div className="p-6">
-                <div className="text-sm text-neon-cyan mb-2">{post.date}</div>
+                <div className="text-sm text-neon-cyan mb-2">{format(new Date(post.createdAt), "MMM dd, yyyy")}</div>
                 <h3 className="text-lg font-bold mb-3 group-hover:text-tech-light transition-colors">
                   {post.title}
                 </h3>

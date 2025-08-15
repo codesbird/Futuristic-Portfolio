@@ -19,31 +19,34 @@ interface SkillFormData {
 
 interface AdminSkillFormProps {
   onClose: () => void;
+  skill?: any;
 }
 
-export default function AdminSkillForm({ onClose }: AdminSkillFormProps) {
+export default function AdminSkillForm({ onClose, skill }: AdminSkillFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState<SkillFormData>({
-    name: "",
-    level: 75,
-    icon: "⚡",
-    color: "#3b82f6",
-    isAdditional: false,
-    order: 1,
+    name: skill?.name || "",
+    level: skill?.level || 75,
+    icon: skill?.icon || "⚡",
+    color: skill?.color || "#3b82f6",
+    isAdditional: skill?.isAdditional || false,
+    order: skill?.order || 1,
   });
 
   const createSkillMutation = useMutation({
     mutationFn: async (data: SkillFormData) => {
-      const response = await apiRequest("POST", "/api/skills", data);
+      const method = skill ? "PUT" : "POST";
+      const url = skill ? `/api/skills/${skill.id}` : "/api/skills";
+      const response = await apiRequest(method, url, data);
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/skills"] });
       toast({
         title: "Success",
-        description: "Skill added successfully!",
+        description: skill ? "Skill updated successfully!" : "Skill added successfully!",
       });
       onClose();
     },
@@ -64,7 +67,7 @@ export default function AdminSkillForm({ onClose }: AdminSkillFormProps) {
   return (
     <Card className="bg-dark-secondary border-gray-700">
       <CardHeader>
-        <CardTitle className="text-white">Add New Skill</CardTitle>
+        <CardTitle className="text-white">{skill ? "Edit Skill" : "Add New Skill"}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -149,7 +152,7 @@ export default function AdminSkillForm({ onClose }: AdminSkillFormProps) {
               disabled={createSkillMutation.isPending}
               className="bg-gradient-to-r from-tech-blue to-tech-light"
             >
-              {createSkillMutation.isPending ? "Adding..." : "Add Skill"}
+              {createSkillMutation.isPending ? (skill ? "Updating..." : "Adding...") : (skill ? "Update Skill" : "Add Skill")}
             </Button>
             <Button 
               type="button" 

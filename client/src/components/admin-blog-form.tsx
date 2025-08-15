@@ -38,7 +38,7 @@ export default function AdminBlogForm({ onClose, blogPost }: AdminBlogFormProps)
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: InsertBlogPost) => apiRequest(`/api/blog-posts`, "POST", data),
+    mutationFn: (data: InsertBlogPost) => apiRequest("POST", `/api/blog-posts`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/blog-posts"] });
       toast({ title: "Blog post created successfully!" });
@@ -50,7 +50,7 @@ export default function AdminBlogForm({ onClose, blogPost }: AdminBlogFormProps)
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data: InsertBlogPost) => apiRequest(`/api/blog-posts/${blogPost?.id}`, "PUT", data),
+    mutationFn: (data: InsertBlogPost) => apiRequest("PUT", `/api/blog-posts/${blogPost?.id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/blog-posts"] });
       toast({ title: "Blog post updated successfully!" });

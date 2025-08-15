@@ -35,7 +35,7 @@ export default function AdminServiceForm({ onClose, service }: AdminServiceFormP
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: InsertService) => apiRequest(`/api/services`, "POST", data),
+    mutationFn: (data: InsertService) => apiRequest("POST", `/api/services`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/services"] });
       toast({ title: "Service created successfully!" });
@@ -47,7 +47,7 @@ export default function AdminServiceForm({ onClose, service }: AdminServiceFormP
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data: InsertService) => apiRequest(`/api/services/${service?.id}`, "PUT", data),
+    mutationFn: (data: InsertService) => apiRequest("PUT", `/api/services/${service?.id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/services"] });
       toast({ title: "Service updated successfully!" });
