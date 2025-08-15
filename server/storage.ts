@@ -610,7 +610,8 @@ export class DatabaseStorage implements IStorage {
 
 // Create storage instance with fallback
 function createStorage(): IStorage {
-  if (dbConnected && db) {
+  // Force database mode since we now have a working connection
+  if (db) {
     console.log("🗄️  Using database storage");
     return new DatabaseStorage();
   } else {
@@ -620,4 +621,106 @@ function createStorage(): IStorage {
 }
 
 export const storage = createStorage();
+
+// Initialize database with sample data
+export async function initializeData() {
+  try {
+    // Check if we already have data
+    const existingSkills = await storage.getSkills();
+    if (existingSkills.length > 0) {
+      console.log("📊 Database already has data, skipping initialization");
+      return;
+    }
+
+    console.log("📊 Initializing database with portfolio data...");
+
+    // Add skills
+    const skillsData = [
+      { name: "HTML/CSS", level: 93, icon: "🎨", color: "#f97316", isAdditional: false, order: 1 },
+      { name: "Python", level: 90, icon: "🐍", color: "#3b82f6", isAdditional: false, order: 2 },
+      { name: "Bootstrap", level: 89, icon: "🎯", color: "#8b5cf6", isAdditional: false, order: 3 },
+      { name: "JavaScript", level: 88, icon: "⚡", color: "#facc15", isAdditional: false, order: 4 },
+      { name: "Django", level: 84, icon: "🌐", color: "#22c55e", isAdditional: false, order: 5 },
+      { name: "React", level: 82, icon: "⚛️", color: "#3b82f6", isAdditional: false, order: 6 },
+      { name: "REST APIs", level: 78, icon: "🔌", color: "#06b6d4", isAdditional: true, order: 7 },
+      { name: "Git", level: 75, icon: "📝", color: "#f97316", isAdditional: true, order: 8 },
+      { name: "NumPy/Pandas", level: 72, icon: "📊", color: "#eab308", isAdditional: true, order: 9 },
+      { name: "Docker", level: 70, icon: "🐳", color: "#3b82f6", isAdditional: true, order: 10 }
+    ];
+
+    for (const skill of skillsData) {
+      await storage.createSkill(skill);
+    }
+
+    // Add services
+    const servicesData = [
+      {
+        title: "Software Development",
+        icon: "💻",
+        description: "Experienced in designing, developing, and maintaining robust, scalable, and efficient software solutions.",
+        price: "₹999/-",
+        features: ["Task automation scripts", "Data processing optimization", "Custom application development"],
+        order: 1
+      },
+      {
+        title: "Web Development",
+        icon: "🌐",
+        description: "Proficient in designing and building dynamic, user-friendly websites.",
+        price: "₹999/-",
+        features: ["Responsive design", "Backend integration", "SEO optimization"],
+        order: 2
+      },
+      {
+        title: "API Development",
+        icon: "🔧",
+        description: "Experience in developing secure and efficient APIs.",
+        price: "₹999/-",
+        features: ["RESTful API design", "Authentication systems", "Documentation"],
+        order: 3
+      }
+    ];
+
+    for (const service of servicesData) {
+      await storage.createService(service);
+    }
+
+    // Add projects
+    const projectsData = [
+      {
+        title: "Sales Prediction System",
+        description: "Built a Python-based model to analyze past data and project sales with high accuracy.",
+        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        technologies: ["Python", "Pandas", "NumPy"],
+        gradientFrom: "#3b82f6",
+        gradientTo: "#1e293b",
+        demoUrl: null,
+        githubUrl: null,
+        featured: true,
+        order: 1,
+        content: null
+      },
+      {
+        title: "KSecure - Internet Security Extension",
+        description: "Designed a Chrome extension to detect manipulative dark patterns.",
+        image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        technologies: ["JavaScript", "Chrome API", "Security"],
+        gradientFrom: "#ec4899",
+        gradientTo: "#1e293b",
+        demoUrl: null,
+        githubUrl: null,
+        featured: true,
+        order: 2,
+        content: null
+      }
+    ];
+
+    for (const project of projectsData) {
+      await storage.createProject(project);
+    }
+
+    console.log("✅ Database initialized with portfolio data");
+  } catch (error) {
+    console.error("❌ Error initializing database:", error);
+  }
+}
 export { db };

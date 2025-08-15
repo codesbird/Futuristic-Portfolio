@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage, initializeData } from "./storage";
 import { setupAuth, requireAuth } from "./auth";
 import { 
   insertContactMessageSchema, 
@@ -15,6 +15,9 @@ import { z } from "zod";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
   setupAuth(app);
+  
+  // Initialize database with sample data
+  initializeData();
   // Contact form submission endpoint
   app.post("/api/contact", async (req, res) => {
     try {

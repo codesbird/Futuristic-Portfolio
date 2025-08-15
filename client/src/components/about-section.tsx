@@ -1,10 +1,23 @@
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import SkillCard from "./skill-card";
-import { SKILLS, ADDITIONAL_SKILLS } from "@/lib/constants";
+import { apiRequest } from "@/lib/queryClient";
+import { Skill } from "@shared/schema";
 
 export default function AboutSection() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  
+  const { data: skills = [], isLoading } = useQuery<Skill[]>({
+    queryKey: ["/api/skills"],
+    queryFn: async () => {
+      const response = await apiRequest("GET", "/api/skills");
+      return response.json();
+    },
+  });
+  
+  const mainSkills = skills.filter(skill => !skill.isAdditional);
+  const additionalSkills = skills.filter(skill => skill.isAdditional);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -47,26 +60,41 @@ export default function AboutSection() {
         </div>
         
         {/* Skills Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-          {SKILLS.map((skill, index) => (
-            <SkillCard 
-              key={skill.name}
-              skill={skill}
-              isVisible={isVisible}
-              delay={index * 100}
-            />
-          ))}
-        </div>
-        
-        {/* Additional Skills */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {ADDITIONAL_SKILLS.map((skill) => (
-            <div key={skill.name} className="glass-morphism rounded-lg p-4 text-center">
-              <div className="text-2xl mb-2">{skill.icon}</div>
-              <div className="text-sm font-semibold">{skill.name} ({skill.level}%)</div>
+        {isLoading ? (
+          <div className="text-center text-gray-400 mb-16">
+            Loading skills...
+          </div>
+        ) : (
+          <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+              {mainSkills.map((skill, index) => (
+                <SkillCard 
+                  key={skill.id}
+                  skill={{
+                    name: skill.name,
+                    level: skill.level,
+                    icon: skill.icon,
+                    color: skill.color
+                  }}
+                  isVisible={isVisible}
+                  delay={index * 100}
+                />
+              ))}
             </div>
-          ))}
-        </div>
+            
+            {/* Additional Skills */}
+            {additionalSkills.length > 0 && (
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {additionalSkills.map((skill) => (
+                  <div key={skill.id} className="glass-morphism rounded-lg p-4 text-center">
+                    <div className="text-2xl mb-2">{skill.icon}</div>
+                    <div className="text-sm font-semibold">{skill.name} ({skill.level}%)</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </section>
   );

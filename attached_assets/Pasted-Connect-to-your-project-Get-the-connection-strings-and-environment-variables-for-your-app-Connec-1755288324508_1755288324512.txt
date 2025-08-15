@@ -1,0 +1,100 @@
+Connect to your project
+Get the connection strings and environment variables for your app
+
+Connection String
+App Frameworks
+Mobile Frameworks
+ORMs
+Type
+
+URI
+Source
+
+Primary database
+Direct connection
+Ideal for applications with persistent, long-lived connections, such as those running on virtual machines or long-standing containers.
+
+postgresql://postgres:[YOUR-PASSWORD]@db.zxzmwxmssgqwwqecvclf.supabase.co:5432/postgres
+
+
+View parameters
+host:
+db.zxzmwxmssgqwwqecvclf.supabase.co
+
+port:
+5432
+
+database:
+postgres
+
+user:
+postgres
+
+For security reasons, your database password is never shown.
+Suitable for long-lived, persistent connections
+Each client has a dedicated connection to Postgres
+Not IPv4 compatible
+Use Session Pooler if on a IPv4 network or purchase IPv4 add-on
+IPv4 add-on
+Pooler settings
+
+Some platforms are IPv4-only:
+Transaction pooler
+Shared Pooler
+Ideal for stateless applications like serverless functions where each interaction with Postgres is brief and isolated.
+
+postgresql://postgres.zxzmwxmssgqwwqecvclf:[YOUR-PASSWORD]@aws-1-us-east-2.pooler.supabase.com:6543/postgres
+
+Does not support PREPARE statements
+
+
+View parameters
+host:
+aws-1-us-east-2.pooler.supabase.com
+
+port:
+6543
+
+database:
+postgres
+
+user:
+postgres.zxzmwxmssgqwwqecvclf
+
+pool_mode:
+transaction
+
+For security reasons, your database password is never shown.
+Suitable for a large number of connected clients
+Pre-warmed connection pool to Postgres
+IPv4 compatible
+Transaction pooler connections are IPv4 proxied for free.
+Session pooler
+Shared Pooler
+Only recommended as an alternative to Direct Connection, when connecting via an IPv4 network.
+
+postgresql://postgres.zxzmwxmssgqwwqecvclf:[YOUR-PASSWORD]@aws-1-us-east-2.pooler.supabase.com:5432/postgres
+
+
+View parameters
+host:
+aws-1-us-east-2.pooler.supabase.com
+
+port:
+5432
+
+database:
+postgres
+
+user:
+postgres.zxzmwxmssgqwwqecvclf
+
+pool_mode:
+session
+
+For security reasons, your database password is never shown.
+IPv4 compatible
+Session pooler connections are IPv4 proxied for free
+Only use on a IPv4 network
+Use Direct Connection if connecting via an IPv6 network
+Reset your database password

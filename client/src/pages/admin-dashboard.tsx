@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { 
   Settings, 
   LogOut, 
@@ -16,10 +17,14 @@ import {
   Shield,
   Plus
 } from "lucide-react";
+import AdminSkillForm from "@/components/admin-skill-form";
+import AdminProjectForm from "@/components/admin-project-form";
 
 export default function AdminDashboard() {
   const { user, logoutMutation } = useAuth();
   const [, setLocation] = useLocation();
+  const [showSkillForm, setShowSkillForm] = useState(false);
+  const [showProjectForm, setShowProjectForm] = useState(false);
 
   if (!user) {
     setLocation("/admin/login");
@@ -130,14 +135,28 @@ export default function AdminDashboard() {
                     <Plus className="mr-2" size={16} />
                     Add New Blog Post
                   </Button>
-                  <Button className="w-full justify-start" variant="outline">
-                    <Plus className="mr-2" size={16} />
-                    Add New Project
-                  </Button>
-                  <Button className="w-full justify-start" variant="outline">
-                    <Plus className="mr-2" size={16} />
-                    Add New Skill
-                  </Button>
+                  <Dialog open={showProjectForm} onOpenChange={setShowProjectForm}>
+                    <DialogTrigger asChild>
+                      <Button className="w-full justify-start" variant="outline">
+                        <Plus className="mr-2" size={16} />
+                        Add New Project
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                      <AdminProjectForm onClose={() => setShowProjectForm(false)} />
+                    </DialogContent>
+                  </Dialog>
+                  <Dialog open={showSkillForm} onOpenChange={setShowSkillForm}>
+                    <DialogTrigger asChild>
+                      <Button className="w-full justify-start" variant="outline">
+                        <Plus className="mr-2" size={16} />
+                        Add New Skill
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <AdminSkillForm onClose={() => setShowSkillForm(false)} />
+                    </DialogContent>
+                  </Dialog>
                 </CardContent>
               </Card>
             </div>
@@ -151,10 +170,17 @@ export default function AdminDashboard() {
                     <Star className="mr-2" size={20} />
                     Manage Skills
                   </span>
-                  <Button>
-                    <Plus className="mr-2" size={16} />
-                    Add Skill
-                  </Button>
+                  <Dialog open={showSkillForm} onOpenChange={setShowSkillForm}>
+                    <DialogTrigger asChild>
+                      <Button>
+                        <Plus className="mr-2" size={16} />
+                        Add Skill
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <AdminSkillForm onClose={() => setShowSkillForm(false)} />
+                    </DialogContent>
+                  </Dialog>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -191,10 +217,17 @@ export default function AdminDashboard() {
                     <Code className="mr-2" size={20} />
                     Manage Projects
                   </span>
-                  <Button>
-                    <Plus className="mr-2" size={16} />
-                    Add Project
-                  </Button>
+                  <Dialog open={showProjectForm} onOpenChange={setShowProjectForm}>
+                    <DialogTrigger asChild>
+                      <Button>
+                        <Plus className="mr-2" size={16} />
+                        Add Project
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                      <AdminProjectForm onClose={() => setShowProjectForm(false)} />
+                    </DialogContent>
+                  </Dialog>
                 </CardTitle>
               </CardHeader>
               <CardContent>
