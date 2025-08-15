@@ -1,6 +1,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,12 +20,34 @@ import {
 } from "lucide-react";
 import AdminSkillForm from "@/components/admin-skill-form";
 import AdminProjectForm from "@/components/admin-project-form";
+import AdminServiceForm from "@/components/admin-service-form";
+import AdminBlogForm from "@/components/admin-blog-form";
+import { 
+  SkillsList, 
+  ServicesList, 
+  ProjectsList, 
+  BlogPostsList, 
+  ContactMessagesList 
+} from "@/components/admin-list-items";
+import type { Skill, Service, Project, BlogPost, ContactMessage } from "@shared/schema";
 
 export default function AdminDashboard() {
   const { user, logoutMutation } = useAuth();
   const [, setLocation] = useLocation();
   const [showSkillForm, setShowSkillForm] = useState(false);
   const [showProjectForm, setShowProjectForm] = useState(false);
+  const [showServiceForm, setShowServiceForm] = useState(false);
+  const [showBlogForm, setShowBlogForm] = useState(false);
+
+  // Fetch data for stats
+  const { data: skills = [] } = useQuery<Skill[]>({ queryKey: ["/api/skills"] });
+  const { data: services = [] } = useQuery<Service[]>({ queryKey: ["/api/services"] });
+  const { data: projects = [] } = useQuery<Project[]>({ queryKey: ["/api/projects"] });
+  const { data: blogPosts = [] } = useQuery<BlogPost[]>({ 
+    queryKey: ["/api/blog-posts"], 
+    queryFn: () => fetch("/api/blog-posts?published=false").then(res => res.json())
+  });
+  const { data: messages = [] } = useQuery<ContactMessage[]>({ queryKey: ["/api/contact-messages"] });
 
   if (!user) {
     setLocation("/admin/login");
@@ -37,10 +60,10 @@ export default function AdminDashboard() {
   };
 
   const stats = [
-    { title: "Contact Messages", value: "12", icon: Mail, color: "bg-blue-500" },
-    { title: "Blog Posts", value: "8", icon: FileText, color: "bg-green-500" },
-    { title: "Projects", value: "6", icon: Code, color: "bg-purple-500" },
-    { title: "Skills", value: "12", icon: Star, color: "bg-yellow-500" },
+    { title: "Contact Messages", value: messages.length.toString(), icon: Mail, color: "bg-blue-500" },
+    { title: "Blog Posts", value: blogPosts.length.toString(), icon: FileText, color: "bg-green-500" },
+    { title: "Projects", value: projects.length.toString(), icon: Code, color: "bg-purple-500" },
+    { title: "Skills", value: skills.length.toString(), icon: Star, color: "bg-yellow-500" },
   ];
 
   return (
@@ -97,12 +120,13 @@ export default function AdminDashboard() {
 
         {/* Main Content */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 bg-dark-secondary">
+          <TabsList className="grid w-full grid-cols-7 bg-dark-secondary">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="skills">Skills</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
             <TabsTrigger value="projects">Projects</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
@@ -116,10 +140,21 @@ export default function AdminDashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-400">No recent contact messages</p>
-                  <Button className="mt-4" variant="outline">
-                    View All Messages
-                  </Button>
+                  {messages.length === 0 ? (
+                    <p className="text-gray-400">No recent contact messages</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {messages.slice(0, 3).map((message) => (
+                        <div key={message.id} className="border-l-2 border-tech-light pl-3">
+                          <p className="text-white font-medium text-sm">{message.subject}</p>
+                          <p className="text-gray-400 text-xs">{message.name} • {message.email}</p>
+                        </div>
+                      ))}
+                      {messages.length > 3 && (
+                        <p className="text-gray-400 text-xs">+{messages.length - 3} more messages</p>
+                      )}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -131,10 +166,17 @@ export default function AdminDashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <Button className="w-full justify-start" variant="outline">
-                    <Plus className="mr-2" size={16} />
-                    Add New Blog Post
-                  </Button>
+                  <Dialog open={showBlogForm} onOpenChange={setShowBlogForm}>
+                    <DialogTrigger asChild>
+                      <Button className="w-full justify-start" variant="outline">
+                        <Plus className="mr-2" size={16} />
+                        Add New Blog Post
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                      <AdminBlogForm onClose={() => setShowBlogForm(false)} />
+                    </DialogContent>
+                  </Dialog>
                   <Dialog open={showProjectForm} onOpenChange={setShowProjectForm}>
                     <DialogTrigger asChild>
                       <Button className="w-full justify-start" variant="outline">
@@ -184,7 +226,7 @@ export default function AdminDashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400">Skills management coming soon...</p>
+                <SkillsList />
               </CardContent>
             </Card>
           </TabsContent>
@@ -197,14 +239,21 @@ export default function AdminDashboard() {
                     <Briefcase className="mr-2" size={20} />
                     Manage Services
                   </span>
-                  <Button>
-                    <Plus className="mr-2" size={16} />
-                    Add Service
-                  </Button>
+                  <Dialog open={showServiceForm} onOpenChange={setShowServiceForm}>
+                    <DialogTrigger asChild>
+                      <Button>
+                        <Plus className="mr-2" size={16} />
+                        Add Service
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                      <AdminServiceForm onClose={() => setShowServiceForm(false)} />
+                    </DialogContent>
+                  </Dialog>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400">Services management coming soon...</p>
+                <ServicesList />
               </CardContent>
             </Card>
           </TabsContent>
@@ -231,7 +280,7 @@ export default function AdminDashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400">Projects management coming soon...</p>
+                <ProjectsList />
               </CardContent>
             </Card>
           </TabsContent>
@@ -251,7 +300,21 @@ export default function AdminDashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400">Blog management coming soon...</p>
+                <BlogPostsList />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="messages">
+            <Card className="bg-dark-secondary border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Mail className="mr-2" size={20} />
+                  Contact Messages
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ContactMessagesList />
               </CardContent>
             </Card>
           </TabsContent>
