@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monu Saini - Python Developer & Data Science Enthusiast</title>
+    <meta name="description" content="Python Developer with 2+ years of freelancing experience in automation, web development, and AI/ML solutions.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif']
+                    },
+                    colors: {
+                        'tech-blue': '#0066CC',
+                        'tech-light': '#00AAFF',
+                        'neon-cyan': '#00FFFF',
+                        'neon-pink': '#FF006A',
+                        'dark-bg': '#0A0A0F',
+                        'dark-secondary': '#1A1A2E',
+                        'glass-bg': 'rgba(255, 255, 255, 0.05)',
+                        'glass-border': 'rgba(255, 255, 255, 0.1)'
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slide-up 0.8s ease-out',
+                        'fade-in': 'fade-in 1s ease-out'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        glow: {
+                            'from': { boxShadow: '0 0 20px rgba(0, 170, 255, 0.5)' },
+                            'to': { boxShadow: '0 0 30px rgba(0, 170, 255, 0.8)' }
+                        },
+                        'slide-up': {
+                            'from': { opacity: '0', transform: 'translateY(30px)' },
+                            'to': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        'fade-in': {
+                            'from': { opacity: '0' },
+                            'to': { opacity: '1' }
+                        }
+                    },
+                    backdropBlur: {
+                        'glass': '10px'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #00AAFF, #00FFFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .typing-animation {
+            overflow: hidden;
+            border-right: 2px solid #00AAFF;
+            white-space: nowrap;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #00AAFF }
+        }
+        
+        .particle {
+            position: absolute;
+            background: #00AAFF;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .progress-bar {
+            transition: width 2s ease-in-out;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body class="font-poppins bg-dark-bg text-white overflow-x-hidden">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-morphism transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-xl font-inter font-bold gradient-text">
+                    TECH2SAINI
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="hover:text-tech-light transition-colors duration-300">Home</a>
+                    <a href="#about" class="hover:text-tech-light transition-colors duration-300">About</a>
+                    <a href="#services" class="hover:text-tech-light transition-colors duration-300">Services</a>
+                    <a href="#portfolio" class="hover:text-tech-light transition-colors duration-300">Portfolio</a>
+                    <a href="#experience" class="hover:text-tech-light transition-colors duration-300">Experience</a>
+                    <a href="#contact" class="hover:text-tech-light transition-colors duration-300">Contact</a>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="md:hidden text-white" id="mobile-menu-toggle">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div class="md:hidden mt-4 hidden" id="mobile-menu">
+                <div class="flex flex-col space-y-4">
+                    <a href="#home" class="hover:text-tech-light transition-colors duration-300">Home</a>
+                    <a href="#about" class="hover:text-tech-light transition-colors duration-300">About</a>
+                    <a href="#services" class="hover:text-tech-light transition-colors duration-300">Services</a>
+                    <a href="#portfolio" class="hover:text-tech-light transition-colors duration-300">Portfolio</a>
+                    <a href="#experience" class="hover:text-tech-light transition-colors duration-300">Experience</a>
+                    <a href="#contact" class="hover:text-tech-light transition-colors duration-300">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <!-- Futuristic tech background with coding setup -->
+        <div class="absolute inset-0 parallax" style="background-image: url('https://pixabay.com/get/g2206b56c8f74a3cba1ee42e94482d465e80c34f868bcef4a660f9924ca00be0c4011ecdd94e720b75bfd059f65ec5657fe605f44f4cefd8c84686228a8a4b752_1280.jpg'); opacity: 0.3;"></div>
+        
+        <!-- Animated particles -->
+        <div class="absolute inset-0">
+            <div class="particle w-2 h-2 top-20 left-20" style="animation-delay: 0s;"></div>
+            <div class="particle w-3 h-3 top-40 right-32" style="animation-delay: 2s;"></div>
+            <div class="particle w-1 h-1 bottom-32 left-40" style="animation-delay: 4s;"></div>
+            <div class="particle w-2 h-2 top-60 left-1/2" style="animation-delay: 1s;"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <div class="animate-fade-in">
+                <h1 class="text-lg md:text-xl text-gray-300 mb-4">Hello, I am</h1>
+                <h2 class="text-4xl md:text-7xl font-inter font-bold mb-6 gradient-text">
+                    Monu Saini
+                </h2>
+                <div class="text-xl md:text-2xl text-gray-300 mb-8 min-h-[60px]">
+                    <span id="typing-text" class="typing-animation"></span>
+                </div>
+                <p class="text-lg md:text-xl max-w-2xl mx-auto text-gray-400 mb-12 leading-relaxed">
+                    Python Developer with 2+ years of freelancing experience delivering automation tools, 
+                    data-driven solutions, and web applications for clients worldwide.
+                </p>
+                
+                <!-- Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-2xl mx-auto mb-12">
+                    <div class="glass-morphism rounded-lg p-6">
+                        <div class="text-3xl font-bold text-tech-light" data-count="10">0</div>
+                        <div class="text-sm text-gray-400">Complete Projects</div>
+                    </div>
+                    <div class="glass-morphism rounded-lg p-6">
+                        <div class="text-3xl font-bold text-neon-cyan" data-count="2">0</div>
+                        <div class="text-sm text-gray-400">Years Experience</div>
+                    </div>
+                    <div class="glass-morphism rounded-lg p-6 col-span-2 md:col-span-1">
+                        <div class="text-3xl font-bold text-neon-pink" data-count="100">0</div>
+                        <div class="text-sm text-gray-400">Client Satisfaction</div>
+                    </div>
+                </div>
+                
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#portfolio" class="bg-gradient-to-r from-tech-blue to-tech-light px-8 py-4 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-tech-light/50 transform hover:scale-105 transition-all duration-300">
+                        View My Work
+                    </a>
+                    <a href="#contact" class="glass-morphism px-8 py-4 rounded-full text-white font-semibold hover:bg-white/10 transition-all duration-300">
+                        Get In Touch
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-tech-light text-xl"></i>
+        </div>
+    </section>
+
+    <!-- About & Skills Section -->
+    <section id="about" class="py-20 relative">
+        <!-- Modern developer workspace background -->
+        <div class="absolute inset-0 opacity-10" style="background-image: url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080'); background-size: cover; background-position: center;"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-inter font-bold mb-6">
+                    My <span class="gradient-text">Advantage</span>
+                </h2>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+                    Dedicated and skilled in Python, machine learning, and web development, 
+                    I combine analytical thinking with creative solutions to deliver impactful results.
+                </p>
+            </div>
+            
+            <!-- Skills Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                <!-- Skill cards with animated progress bars -->
+                <div class="glass-morphism rounded-xl p-6 skill-card" data-skill="93">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <i class="fab fa-html5 text-2xl text-orange-500 mr-3"></i>
+                            <span class="font-semibold">HTML/CSS</span>
+                        </div>
+                        <span class="text-tech-light font-bold">93%</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="progress-bar bg-gradient-to-r from-orange-500 to-red-500 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="glass-morphism rounded-xl p-6 skill-card" data-skill="90">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <i class="fab fa-python text-2xl text-yellow-500 mr-3"></i>
+                            <span class="font-semibold">Python</span>
+                        </div>
+                        <span class="text-tech-light font-bold">90%</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="progress-bar bg-gradient-to-r from-yellow-500 to-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="glass-morphism rounded-xl p-6 skill-card" data-skill="89">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <i class="fab fa-bootstrap text-2xl text-purple-500 mr-3"></i>
+                            <span class="font-semibold">Bootstrap</span>
+                        </div>
+                        <span class="text-tech-light font-bold">89%</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="progress-bar bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="glass-morphism rounded-xl p-6 skill-card" data-skill="88">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <i class="fab fa-js-square text-2xl text-yellow-400 mr-3"></i>
+                            <span class="font-semibold">JavaScript</span>
+                        </div>
+                        <span class="text-tech-light font-bold">88%</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="progress-bar bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="glass-morphism rounded-xl p-6 skill-card" data-skill="84">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-server text-2xl text-green-500 mr-3"></i>
+                            <span class="font-semibold">Django</span>
+                        </div>
+                        <span class="text-tech-light font-bold">84%</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="progress-bar bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="glass-morphism rounded-xl p-6 skill-card" data-skill="82">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <i class="fab fa-react text-2xl text-blue-400 mr-3"></i>
+                            <span class="font-semibold">React</span>
+                        </div>
+                        <span class="text-tech-light font-bold">82%</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="progress-bar bg-gradient-to-r from-blue-400 to-cyan-500 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Skills -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-morphism rounded-lg p-4 text-center">
+                    <i class="fas fa-code text-2xl text-tech-light mb-2"></i>
+                    <div class="text-sm font-semibold">REST APIs (78%)</div>
+                </div>
+                <div class="glass-morphism rounded-lg p-4 text-center">
+                    <i class="fab fa-git-alt text-2xl text-orange-500 mb-2"></i>
+                    <div class="text-sm font-semibold">Git (75%)</div>
+                </div>
+                <div class="glass-morphism rounded-lg p-4 text-center">
+                    <i class="fas fa-database text-2xl text-blue-500 mb-2"></i>
+                    <div class="text-sm font-semibold">NumPy/Pandas (72%)</div>
+                </div>
+                <div class="glass-morphism rounded-lg p-4 text-center">
+                    <i class="fab fa-docker text-2xl text-blue-400 mb-2"></i>
+                    <div class="text-sm font-semibold">Docker (70%)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-dark-secondary relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-inter font-bold mb-6">
+                    Popular <span class="gradient-text">Services</span>
+                </h2>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+                    Offering innovative and user-friendly solutions tailored to enhance customer experiences 
+                    and meet their needs effectively.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service Card 1 -->
+                <div class="glass-morphism rounded-xl p-8 service-card group hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4 group-hover:animate-bounce">
+                        <i class="fas fa-laptop-code text-tech-light"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 group-hover:text-tech-light transition-colors">Software Development</h3>
+                    <p class="text-gray-400 mb-6">
+                        Experienced in designing, developing, and maintaining robust, scalable, and efficient 
+                        software solutions to meet unique user and business needs.
+                    </p>
+                    <div class="text-2xl font-bold text-neon-cyan mb-2">₹999/-</div>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• Task automation scripts</li>
+                        <li>• Data processing optimization</li>
+                        <li>• Custom application development</li>
+                    </ul>
+                </div>
+                
+                <!-- Service Card 2 -->
+                <div class="glass-morphism rounded-xl p-8 service-card group hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4 group-hover:animate-bounce">
+                        <i class="fas fa-globe text-tech-light"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 group-hover:text-tech-light transition-colors">Web Development</h3>
+                    <p class="text-gray-400 mb-6">
+                        Proficient in designing and building dynamic, user-friendly websites that enhance 
+                        user engagement and meet business goals.
+                    </p>
+                    <div class="text-2xl font-bold text-neon-cyan mb-2">₹999/-</div>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• Responsive design</li>
+                        <li>• Backend integration</li>
+                        <li>• SEO optimization</li>
+                    </ul>
+                </div>
+                
+                <!-- Service Card 3 -->
+                <div class="glass-morphism rounded-xl p-8 service-card group hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4 group-hover:animate-bounce">
+                        <i class="fas fa-cogs text-tech-light"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 group-hover:text-tech-light transition-colors">API Development</h3>
+                    <p class="text-gray-400 mb-6">
+                        Experience in developing secure and efficient APIs to streamline data communication 
+                        and integration across systems.
+                    </p>
+                    <div class="text-2xl font-bold text-neon-cyan mb-2">₹999/-</div>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• RESTful API design</li>
+                        <li>• Authentication systems</li>
+                        <li>• Documentation</li>
+                    </ul>
+                </div>
+                
+                <!-- Service Card 4 -->
+                <div class="glass-morphism rounded-xl p-8 service-card group hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4 group-hover:animate-bounce">
+                        <i class="fas fa-robot text-tech-light"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 group-hover:text-tech-light transition-colors">Automation with Python</h3>
+                    <p class="text-gray-400 mb-6">
+                        Specialized in automating repetitive tasks and workflows using Python, enhancing 
+                        productivity and efficiency for businesses and individuals.
+                    </p>
+                    <div class="text-2xl font-bold text-neon-cyan mb-2">₹999/-</div>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• Task automation</li>
+                        <li>• Workflow optimization</li>
+                        <li>• Process streamlining</li>
+                    </ul>
+                </div>
+                
+                <!-- Service Card 5 -->
+                <div class="glass-morphism rounded-xl p-8 service-card group hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4 group-hover:animate-bounce">
+                        <i class="fas fa-chart-bar text-tech-light"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 group-hover:text-tech-light transition-colors">Data Analysis & Visualization</h3>
+                    <p class="text-gray-400 mb-6">
+                        Expertise in extracting actionable insights from data and presenting them visually 
+                        for better decision-making.
+                    </p>
+                    <div class="text-2xl font-bold text-neon-cyan mb-2">₹999/-</div>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• Statistical analysis</li>
+                        <li>• Interactive dashboards</li>
+                        <li>• Data visualization</li>
+                    </ul>
+                </div>
+                
+                <!-- Service Card 6 -->
+                <div class="glass-morphism rounded-xl p-8 service-card group hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4 group-hover:animate-bounce">
+                        <i class="fas fa-brain text-tech-light"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 group-hover:text-tech-light transition-colors">AI/ML Solutions</h3>
+                    <p class="text-gray-400 mb-6">
+                        Capable of implementing advanced AI/ML-based solutions, including predictive models 
+                        and automated systems, to drive innovation.
+                    </p>
+                    <div class="text-2xl font-bold text-neon-cyan mb-2">₹999/-</div>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• Predictive models</li>
+                        <li>• Machine learning</li>
+                        <li>• Deep learning solutions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-20 relative">
+        <!-- Coding workspace background -->
+        <div class="absolute inset-0 opacity-5" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080'); background-size: cover; background-position: center;"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-inter font-bold mb-6">
+                    Featured <span class="gradient-text">Projects</span>
+                </h2>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+                    A showcase of my journey in software development, data analysis, and innovative projects.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="glass-morphism rounded-xl overflow-hidden project-card group">
+                    <!-- Modern tech setup visualization -->
+                    <div class="relative h-48 bg-gradient-to-br from-tech-blue to-dark-secondary overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" alt="Data analytics dashboard" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-bg/80 to-transparent"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-tech-light transition-colors">Sales Prediction System</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Built a Python-based model to analyze past data and project sales with high accuracy 
+                            for business forecasting using Pandas, NumPy, and Openpyxl.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded">Python</span>
+                            <span class="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded">Pandas</span>
+                            <span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">NumPy</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center text-tech-light hover:text-neon-cyan transition-colors">
+                            View Project <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="glass-morphism rounded-xl overflow-hidden project-card group">
+                    <!-- Security/browser extension visualization -->
+                    <div class="relative h-48 bg-gradient-to-br from-neon-pink to-dark-secondary overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" alt="Security shield and browser interface" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-bg/80 to-transparent"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-tech-light transition-colors">KSecure - Internet Security Extension</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Designed a Chrome extension to detect manipulative dark patterns and provide 
+                            user security features like VPN integration.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-orange-500/20 text-orange-400 text-xs rounded">JavaScript</span>
+                            <span class="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded">Chrome API</span>
+                            <span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded">Security</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center text-tech-light hover:text-neon-cyan transition-colors">
+                            View Project <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Project 3 -->
+                <div class="glass-morphism rounded-xl overflow-hidden project-card group">
+                    <!-- AI/ML news detection visualization -->
+                    <div class="relative h-48 bg-gradient-to-br from-neon-cyan to-dark-secondary overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" alt="AI brain and news articles interface" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-bg/80 to-transparent"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-tech-light transition-colors">Fake News Detection System</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Developed an ML-based system to detect fake news, integrate fact-checking APIs, 
+                            and enhance trust through user authentication.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded">Machine Learning</span>
+                            <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded">Python</span>
+                            <span class="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded">NLP</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center text-tech-light hover:text-neon-cyan transition-colors">
+                            View Project <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Project 4 -->
+                <div class="glass-morphism rounded-xl overflow-hidden project-card group">
+                    <!-- E-commerce website visualization -->
+                    <div class="relative h-48 bg-gradient-to-br from-green-500 to-dark-secondary overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" alt="Modern e-commerce website interface" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-bg/80 to-transparent"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-tech-light transition-colors">Optimiseres - eCommerce Website</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Developed a modern, responsive marketing website for an eCommerce consultancy firm 
+                            with service pages, testimonials, and portfolio gallery.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">Flask</span>
+                            <span class="px-2 py-1 bg-orange-500/20 text-orange-400 text-xs rounded">HTML/CSS</span>
+                            <span class="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded">Bootstrap</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center text-tech-light hover:text-neon-cyan transition-colors">
+                            View Project <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Project 5 -->
+                <div class="glass-morphism rounded-xl overflow-hidden project-card group">
+                    <!-- Media/audio converter visualization -->
+                    <div class="relative h-48 bg-gradient-to-br from-red-500 to-dark-secondary overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" alt="Audio waveform and media player interface" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-bg/80 to-transparent"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-tech-light transition-colors">YouTube to MP3 Converter</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Built a user-friendly tool to seamlessly convert YouTube videos to MP3 formats 
+                            with efficient backend processing.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded">Python</span>
+                            <span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded">API Integration</span>
+                            <span class="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded">Media Processing</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center text-tech-light hover:text-neon-cyan transition-colors">
+                            View Project <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Project 6 -->
+                <div class="glass-morphism rounded-xl overflow-hidden project-card group">
+                    <!-- News aggregation visualization -->
+                    <div class="relative h-48 bg-gradient-to-br from-indigo-500 to-dark-secondary overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" alt="News aggregation dashboard with multiple sources" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-bg/80 to-transparent"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-tech-light transition-colors">Automated News Aggregation Platform</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            News fetching, categorization, and display system that showcases ability to merge 
+                            creativity with technology.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded">Web Scraping</span>
+                            <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded">Python</span>
+                            <span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">Automation</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center text-tech-light hover:text-neon-cyan transition-colors">
+                            View Project <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section id="experience" class="py-20 bg-dark-secondary relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-inter font-bold mb-6">
+                    My <span class="gradient-text">Experience</span>
+                </h2>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+                    A timeline of my professional journey and key achievements in software development.
+                </p>
+            </div>
+            
+            <div class="relative">
+                <!-- Timeline line -->
+                <div class="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-gradient-to-b from-tech-light to-neon-cyan"></div>
+                
+                <!-- Timeline items -->
+                <div class="space-y-12">
+                    <!-- Experience 1 -->
+                    <div class="relative flex items-center">
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 bg-tech-light rounded-full border-4 border-dark-bg"></div>
+                        <div class="ml-16 md:ml-0 md:w-1/2 md:pr-8">
+                            <div class="glass-morphism rounded-xl p-6">
+                                <div class="text-sm text-neon-cyan mb-2">July 2023 – Present</div>
+                                <h3 class="text-xl font-bold mb-2">Python Developer – Freelance</h3>
+                                <p class="text-gray-400 mb-4">Self-Employed | Remote</p>
+                                <ul class="text-sm text-gray-300 space-y-2">
+                                    <li>• Built and deployed Python-based automation, data analysis, and web apps for global clients</li>
+                                    <li>• Designed REST API integrations, AI/ML features, and automated solutions with Python tools</li>
+                                    <li>• Delivered solutions in Python, Django, Flask and SQL with 100% client satisfaction</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Education 1 -->
+                    <div class="relative flex items-center md:flex-row-reverse">
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 bg-neon-pink rounded-full border-4 border-dark-bg"></div>
+                        <div class="ml-16 md:ml-0 md:w-1/2 md:pl-8">
+                            <div class="glass-morphism rounded-xl p-6">
+                                <div class="text-sm text-neon-cyan mb-2">Expected May 2025</div>
+                                <h3 class="text-xl font-bold mb-2">MCA - Master of Computer Applications</h3>
+                                <p class="text-gray-400 mb-4">Abdul Kalam Technical University, UP</p>
+                                <div class="text-tech-light font-semibold mb-2">CGPA: 7.5</div>
+                                <p class="text-sm text-gray-300">
+                                    Relevant coursework: C/C++ Programming, DBMS, OOPs, Python, Data Structures & Algorithms, 
+                                    SQL, Firebase, React, Docker, AI/ML Integration
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Education 2 -->
+                    <div class="relative flex items-center">
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 bg-neon-cyan rounded-full border-4 border-dark-bg"></div>
+                        <div class="ml-16 md:ml-0 md:w-1/2 md:pr-8">
+                            <div class="glass-morphism rounded-xl p-6">
+                                <div class="text-sm text-neon-cyan mb-2">July 2023</div>
+                                <h3 class="text-xl font-bold mb-2">BCA - Bachelor of Computer Applications</h3>
+                                <p class="text-gray-400 mb-4">Rajasthan University, Rajasthan</p>
+                                <div class="text-tech-light font-semibold mb-2">CGPA: 7.5</div>
+                                <p class="text-sm text-gray-300">
+                                    Relevant Coursework: Python, DBMS, SQL
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog/News Section -->
+    <section class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-inter font-bold mb-6">
+                    Latest <span class="gradient-text">News</span>
+                </h2>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+                    Stay updated with my latest projects, insights, and achievements in the world of technology.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Blog Post 1 -->
+                <div class="glass-morphism rounded-xl overflow-hidden group hover:scale-105 transition-all duration-300">
+                    <div class="p-6">
+                        <div class="text-sm text-neon-cyan mb-2">December 28, 2024</div>
+                        <h3 class="text-lg font-bold mb-3 group-hover:text-tech-light transition-colors">
+                            Revolutionizing Online Safety with "KSecure" Project
+                        </h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            In my ongoing project KSecure, I aim to enhance online safety by detecting dark patterns 
+                            in e-commerce websites, promoting ethical design...
+                        </p>
+                        <div class="text-xs text-gray-500 mb-4">Author: Monu Saini</div>
+                        <a href="#" class="inline-flex items-center text-tech-light hover:text-neon-cyan transition-colors text-sm">
+                            Read More <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Blog Post 2 -->
+                <div class="glass-morphism rounded-xl overflow-hidden group hover:scale-105 transition-all duration-300">
+                    <div class="p-6">
+                        <div class="text-sm text-neon-cyan mb-2">December 15, 2024</div>
+                        <h3 class="text-lg font-bold mb-3 group-hover:text-tech-light transition-colors">
+                            Building Trust in Media: Fake News Detection System
+                        </h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            My project leverages machine learning to detect fake news and incorporates a fact-checking 
+                            feature to ensure information accuracy...
+                        </p>
+                        <div class="text-xs text-gray-500 mb-4">Author: Monu Saini</div>
+                        <a href="#" class="inline-flex items-center text-tech-light hover:text-neon-cyan transition-colors text-sm">
+                            Read More <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Blog Post 3 -->
+                <div class="glass-morphism rounded-xl overflow-hidden group hover:scale-105 transition-all duration-300">
+                    <div class="p-6">
+                        <div class="text-sm text-neon-cyan mb-2">November 25, 2024</div>
+                        <h3 class="text-lg font-bold mb-3 group-hover:text-tech-light transition-colors">
+                            Achieving New Heights: 5-Star HackerRank Python Certification
+                        </h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            With a global rank under 40k in Python and 4-star certification in C on HackerRank, 
+                            I continue to excel in competitive programming...
+                        </p>
+                        <div class="text-xs text-gray-500 mb-4">Author: Monu Saini</div>
+                        <a href="#" class="inline-flex items-center text-tech-light hover:text-neon-cyan transition-colors text-sm">
+                            Read More <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-dark-secondary relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-inter font-bold mb-6">
+                    Let's <span class="gradient-text">Talk</span>
+                </h2>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+                    Feel free to reach out and discuss how we can collaborate to bring your ideas to life 
+                    with innovative and tailored solutions.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-8">Get In Touch</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-tech-light/20 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-envelope text-tech-light"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">Email</div>
+                                <div class="text-gray-400">monusainideveloper@gmail.com</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-neon-cyan/20 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-phone text-neon-cyan"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">Phone</div>
+                                <div class="text-gray-400">+91 8696807790</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-neon-pink/20 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-map-marker-alt text-neon-pink"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">Location</div>
+                                <div class="text-gray-400">Chhatarpur, New Delhi</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fab fa-linkedin text-blue-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">LinkedIn</div>
+                                <div class="text-gray-400">linkedin.com/in/monupydev</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div class="glass-morphism rounded-xl p-8">
+                    <form class="space-y-6">
+                        <div>
+                            <input type="text" placeholder="Your Name" data-mock="true" class="w-full px-4 py-3 bg-dark-bg/50 border border-gray-600 rounded-lg focus:border-tech-light focus:outline-none transition-colors" />
+                        </div>
+                        
+                        <div>
+                            <input type="email" placeholder="Your Email" data-mock="true" class="w-full px-4 py-3 bg-dark-bg/50 border border-gray-600 rounded-lg focus:border-tech-light focus:outline-none transition-colors" />
+                        </div>
+                        
+                        <div>
+                            <input type="tel" placeholder="Phone" data-mock="true" class="w-full px-4 py-3 bg-dark-bg/50 border border-gray-600 rounded-lg focus:border-tech-light focus:outline-none transition-colors" />
+                        </div>
+                        
+                        <div>
+                            <input type="text" placeholder="Subject" data-mock="true" class="w-full px-4 py-3 bg-dark-bg/50 border border-gray-600 rounded-lg focus:border-tech-light focus:outline-none transition-colors" />
+                        </div>
+                        
+                        <div>
+                            <textarea rows="4" placeholder="Message" data-mock="true" class="w-full px-4 py-3 bg-dark-bg/50 border border-gray-600 rounded-lg focus:border-tech-light focus:outline-none transition-colors resize-none"></textarea>
+                        </div>
+                        
+                        <button type="submit" data-event="click:handleContactSubmit" data-implementation="Should validate form and send email" class="w-full bg-gradient-to-r from-tech-blue to-tech-light px-8 py-4 rounded-lg text-white font-semibold hover:shadow-lg hover:shadow-tech-light/50 transform hover:scale-105 transition-all duration-300">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-dark-bg border-t border-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="text-2xl font-inter font-bold gradient-text mb-4">TECH2SAINI</div>
+                    <p class="text-gray-400 max-w-md">
+                        Explore innovative solutions, personalized services, and projects tailored to your needs. 
+                        Let's create something exceptional together!
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Navigation</h4>
+                    <div class="space-y-2">
+                        <a href="#home" class="block text-gray-400 hover:text-tech-light transition-colors">Home</a>
+                        <a href="#about" class="block text-gray-400 hover:text-tech-light transition-colors">About</a>
+                        <a href="#services" class="block text-gray-400 hover:text-tech-light transition-colors">Services</a>
+                        <a href="#portfolio" class="block text-gray-400 hover:text-tech-light transition-colors">Portfolio</a>
+                        <a href="#contact" class="block text-gray-400 hover:text-tech-light transition-colors">Contact</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Services</h4>
+                    <div class="space-y-2">
+                        <div class="text-gray-400">Software Development</div>
+                        <div class="text-gray-400">Web Development</div>
+                        <div class="text-gray-400">Data Analysis</div>
+                        <div class="text-gray-400">Automation</div>
+                        <div class="text-gray-400">AI/ML Solutions</div>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="border-gray-800 my-8">
+            
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-gray-400 text-sm">
+                    © 2024 Monu Saini. All rights reserved.
+                </div>
+                
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="w-10 h-10 bg-tech-light/20 rounded-full flex items-center justify-center text-tech-light hover:bg-tech-light hover:text-white transition-all duration-300">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-neon-cyan/20 rounded-full flex items-center justify-center text-neon-cyan hover:bg-neon-cyan hover:text-dark-bg transition-all duration-300">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-neon-pink/20 rounded-full flex items-center justify-center text-neon-pink hover:bg-neon-pink hover:text-white transition-all duration-300">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            // Typing animation for hero section
+            const texts = [
+                "Python Developer & Data Science Enthusiast",
+                "Full-Stack Web Developer",
+                "Automation & AI/ML Specialist", 
+                "Problem Solver & Tech Innovator"
+            ];
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            const typingElement = document.getElementById('typing-text');
+            
+            function typeText() {
+                const currentText = texts[textIndex];
+                
+                if (isDeleting) {
+                    typingElement.textContent = currentText.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    typingElement.textContent = currentText.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+                
+                let typeSpeed = isDeleting ? 50 : 100;
+                
+                if (!isDeleting && charIndex === currentText.length) {
+                    typeSpeed = 2000;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % texts.length;
+                    typeSpeed = 500;
+                }
+                
+                setTimeout(typeText, typeSpeed);
+            }
+            
+            // Start typing animation
+            setTimeout(typeText, 1000);
+            
+            // Animated counters
+            function animateCounters() {
+                const counters = document.querySelectorAll('[data-count]');
+                counters.forEach(counter => {
+                    const target = parseInt(counter.getAttribute('data-count'));
+                    let count = 0;
+                    const increment = target / 100;
+                    
+                    const timer = setInterval(() => {
+                        count += increment;
+                        if (count >= target) {
+                            counter.textContent = target + (target === 100 ? '%' : '+');
+                            clearInterval(timer);
+                        } else {
+                            counter.textContent = Math.ceil(count) + (target === 100 ? '%' : '+');
+                        }
+                    }, 20);
+                });
+            }
+            
+            // Animate skill progress bars
+            function animateSkillBars() {
+                const skillCards = document.querySelectorAll('.skill-card');
+                skillCards.forEach(card => {
+                    const skillLevel = card.getAttribute('data-skill');
+                    const progressBar = card.querySelector('.progress-bar');
+                    
+                    setTimeout(() => {
+                        progressBar.style.width = skillLevel + '%';
+                    }, 500);
+                });
+            }
+            
+            // Intersection Observer for animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-slide-up');
+                        
+                        // Trigger specific animations
+                        if (entry.target.querySelector('[data-count]')) {
+                            animateCounters();
+                        }
+                        
+                        if (entry.target.querySelector('.skill-card')) {
+                            animateSkillBars();
+                        }
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe sections for animations
+            document.querySelectorAll('section').forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                const icon = mobileMenuToggle.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+            
+            // Smooth scroll for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // Close mobile menu if open
+                        mobileMenu.classList.add('hidden');
+                        const icon = mobileMenuToggle.querySelector('i');
+                        icon.classList.add('fa-bars');
+                        icon.classList.remove('fa-times');
+                    }
+                });
+            });
+            
+            // Navbar background on scroll
+            window.addEventListener('scroll', () => {
+                const navbar = document.getElementById('navbar');
+                if (window.scrollY > 50) {
+                    navbar.style.backgroundColor = 'rgba(10, 10, 15, 0.95)';
+                } else {
+                    navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                }
+            });
+            
+            // Add hover effects to service cards
+            document.querySelectorAll('.service-card').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-10px)';
+                    card.style.boxShadow = '0 20px 40px rgba(0, 170, 255, 0.2)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = 'none';
+                });
+            });
+            
+            // Add hover effects to project cards
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-5px)';
+                    card.style.boxShadow = '0 15px 30px rgba(0, 255, 255, 0.15)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = 'none';
+                });
+            });
+            
+            // Form validation placeholder
+            // TODO: Implement form validation and submission logic
+            document.querySelector('form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                // TODO: Add form validation
+                // TODO: Implement email sending functionality
+                console.log('Form submitted - implement validation and sending logic');
+            });
+            
+        })();
+    </script>
+</body>
+</html>
