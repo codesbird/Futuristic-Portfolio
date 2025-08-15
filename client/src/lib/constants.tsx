@@ -1,4 +1,51 @@
-export const SKILLS = [
+interface Skill {
+  name: string;
+  level: number;
+  icon: string;
+  color: string;
+}
+
+interface Service {
+  title: string;
+  description: string;
+  price: string;
+  features: string[];
+  icon: string;
+}
+
+interface Project {
+  title: string;
+  description: string;
+  image: string;
+  technologies: string[];
+  gradientFrom: string;
+  gradientTo: string;
+}
+
+interface ExperienceItem {
+  period: string;
+  title: string;
+  company: string;
+  description?: string[];
+  gpa?: string;
+  coursework?: string;
+  color: string;
+}
+
+interface BlogPost {
+  title: string;
+  excerpt: string;
+  date: string;
+  author: string;
+}
+
+interface AdditionalSkill {
+  name: string;
+  level: number;
+  icon: string;
+}
+
+export const SKILLS: Skill[] = [
   {
     name: "HTML/CSS",
     level: 93,
@@ -37,14 +84,14 @@ export const SKILLS = [
   }
 ];
 
-export const ADDITIONAL_SKILLS = [
+export const ADDITIONAL_SKILLS: AdditionalSkill[] = [
   { name: "REST APIs", level: 78, icon: "🔌" },
   { name: "Git", level: 75, icon: "📝" },
   { name: "NumPy/Pandas", level: 72, icon: "📊" },
   { name: "Docker", level: 70, icon: "🐳" }
 ];
 
-export const SERVICES = [
+export const SERVICES: Service[] = [
   {
     title: "Software Development",
     description: "Experienced in designing, developing, and maintaining robust, scalable, and efficient software solutions to meet unique user and business needs.",
@@ -113,7 +160,7 @@ export const SERVICES = [
   }
 ];
 
-export const PROJECTS = [
+export const PROJECTS: Project[] = [
   {
     title: "Sales Prediction System",
     description: "Built a Python-based model to analyze past data and project sales with high accuracy for business forecasting using Pandas, NumPy, and Openpyxl.",
@@ -164,7 +211,7 @@ export const PROJECTS = [
   }
 ];
 
-export const EXPERIENCE_TIMELINE = [
+export const EXPERIENCE_TIMELINE: ExperienceItem[] = [
   {
     period: "July 2023 – Present",
     title: "Python Developer – Freelance",
@@ -194,7 +241,7 @@ export const EXPERIENCE_TIMELINE = [
   }
 ];
 
-export const BLOG_POSTS = [
+export const BLOG_POSTS: BlogPost[] = [
   {
     title: "Revolutionizing Online Safety with 'KSecure' Project",
     excerpt: "In my ongoing project KSecure, I aim to enhance online safety by detecting dark patterns in e-commerce websites, promoting ethical design...",

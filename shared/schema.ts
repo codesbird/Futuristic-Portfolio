@@ -1,12 +1,16 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, boolean, integer, json } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
+  email: text("email").notNull().unique(),
   password: text("password").notNull(),
+  name: text("name").notNull(),
+  twoFactorSecret: text("two_factor_secret"),
+  twoFactorEnabled: boolean("two_factor_enabled").default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const contactMessages = pgTable("contact_messages", {
@@ -19,9 +23,85 @@ export const contactMessages = pgTable("contact_messages", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const skills = pgTable("skills", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  level: integer("level").notNull(),
+  icon: text("icon").notNull(),
+  color: text("color").notNull(),
+  isAdditional: boolean("is_additional").default(false),
+  order: integer("order").default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const services = pgTable("services", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  price: text("price").notNull(),
+  features: json("features").$type<string[]>().notNull(),
+  icon: text("icon").notNull(),
+  order: integer("order").default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const projects = pgTable("projects", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  content: text("content"), // For case study page
+  image: text("image").notNull(),
+  technologies: json("technologies").$type<string[]>().notNull(),
+  gradientFrom: text("gradient_from").notNull(),
+  gradientTo: text("gradient_to").notNull(),
+  demoUrl: text("demo_url"),
+  githubUrl: text("github_url"),
+  featured: boolean("featured").default(false),
+  order: integer("order").default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const experiences = pgTable("experiences", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  period: text("period").notNull(),
+  title: text("title").notNull(),
+  company: text("company").notNull(),
+  description: json("description").$type<string[]>(),
+  gpa: text("gpa"),
+  coursework: text("coursework"),
+  color: text("color").notNull(),
+  order: integer("order").default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const blogPosts = pgTable("blog_posts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  excerpt: text("excerpt").notNull(),
+  content: text("content").notNull(),
+  author: text("author").notNull(),
+  slug: text("slug").notNull().unique(),
+  published: boolean("published").default(false),
+  featuredImage: text("featured_image"),
+  tags: json("tags").$type<string[]>().default([]),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
+  email: true,
   password: true,
+  name: true,
+});
+
+export const loginUserSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+  twoFactorCode: z.string().optional(),
 });
 
 export const insertContactMessageSchema = createInsertSchema(contactMessages).pick({
@@ -32,7 +112,55 @@ export const insertContactMessageSchema = createInsertSchema(contactMessages).pi
   message: true,
 });
 
+export const insertSkillSchema = createInsertSchema(skills).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertServiceSchema = createInsertSchema(services).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertProjectSchema = createInsertSchema(projects).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertExperienceSchema = createInsertSchema(experiences).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertBlogPostSchema = createInsertSchema(blogPosts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
+export type LoginUser = z.infer<typeof loginUserSchema>;
 export type User = typeof users.$inferSelect;
+
 export type InsertContactMessage = z.infer<typeof insertContactMessageSchema>;
 export type ContactMessage = typeof contactMessages.$inferSelect;
+
+export type InsertSkill = z.infer<typeof insertSkillSchema>;
+export type Skill = typeof skills.$inferSelect;
+
+export type InsertService = z.infer<typeof insertServiceSchema>;
+export type Service = typeof services.$inferSelect;
+
+export type InsertProject = z.infer<typeof insertProjectSchema>;
+export type Project = typeof projects.$inferSelect;
+
+export type InsertExperience = z.infer<typeof insertExperienceSchema>;
+export type Experience = typeof experiences.$inferSelect;
+
+export type InsertBlogPost = z.infer<typeof insertBlogPostSchema>;
+export type BlogPost = typeof blogPosts.$inferSelect;
