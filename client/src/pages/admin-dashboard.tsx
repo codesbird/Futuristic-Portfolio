@@ -38,7 +38,8 @@ import {
   ProjectsList, 
   BlogPostsList, 
   ContactMessagesList,
-  ExperiencesList 
+  ExperiencesList,
+  AdminNewsletterList 
 } from "@/components/admin-list-items";
 import type { Skill, Service, Project, BlogPost, ContactMessage, Experience } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
@@ -58,6 +59,7 @@ const navItems: NavItem[] = [
   { id: "experiences", label: "Experience", icon: Clock, color: "text-indigo-400" },
   { id: "blog", label: "Blog Posts", icon: FileText, color: "text-red-400" },
   { id: "messages", label: "Messages", icon: Mail, color: "text-cyan-400" },
+  { id: "newsletter", label: "Newsletter", icon: Users, color: "text-orange-400" },
   { id: "settings", label: "Settings", icon: Settings, color: "text-gray-400" },
 ];
 
@@ -395,6 +397,20 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
         );
+      case "newsletter":
+        return (
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <Users className="mr-2" size={20} />
+                Newsletter Subscribers
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <AdminNewsletterList />
+            </CardContent>
+          </Card>
+        );
       case "settings":
         return (
           <Card className="bg-gray-800 border-gray-700">
@@ -482,12 +498,6 @@ export default function AdminDashboard() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
-                  <Users size={16} />
-                </div>
-                <span className="text-white text-sm">{user.name}</span>
-              </div>
               <Button
                 variant="ghost"
                 size="sm"

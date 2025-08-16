@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { 
   Edit, 
   Edit2,
@@ -17,7 +18,10 @@ import {
   Phone,
   Calendar,
   User,
-  MessageSquare
+  MessageSquare,
+  AlertTriangle,
+  UserX,
+  UserCheck
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -55,65 +59,83 @@ export function ExperiencesList({ experiences, onEdit, onDelete }: {
     );
   }
 
+  const [deleteConfirm, setDeleteConfirm] = useState<{open: boolean, experience: Experience | null}>({
+    open: false,
+    experience: null
+  });
+
   return (
     <div className="space-y-4">
       {experiences.map((experience) => (
-        <Card key={experience.id} className="bg-dark-secondary border-gray-700">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start">
+        <Card key={experience.id} className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-start space-y-3 md:space-y-0">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <div
-                    className="w-4 h-4 rounded-full"
+                    className="w-4 h-4 rounded-full flex-shrink-0"
                     style={{ backgroundColor: experience.color }}
                   />
-                  <h3 className="text-lg font-semibold text-white">{experience.title}</h3>
+                  <h3 className="text-lg font-semibold text-white break-words">{experience.title}</h3>
                 </div>
-                <p className="text-gray-400 mb-1">{experience.company}</p>
-                <p className="text-sm text-neon-cyan mb-2">{experience.period}</p>
+                <p className="text-gray-400 mb-1 text-sm md:text-base">{experience.company}</p>
+                <p className="text-sm text-cyan-400 mb-2">{experience.period}</p>
                 {experience.gpa && (
-                  <p className="text-sm text-tech-light mb-2">CGPA: {experience.gpa}</p>
+                  <p className="text-sm text-blue-400 mb-2">CGPA: {experience.gpa}</p>
                 )}
                 {experience.description && experience.description.length > 0 && (
                   <ul className="text-sm text-gray-300 space-y-1 mb-2">
                     {experience.description.map((desc, i) => (
-                      <li key={i}>• {desc}</li>
+                      <li key={i} className="break-words">• {desc}</li>
                     ))}
                   </ul>
                 )}
                 {experience.coursework && (
-                  <p className="text-sm text-gray-300">{experience.coursework}</p>
+                  <p className="text-sm text-gray-300 break-words">{experience.coursework}</p>
                 )}
               </div>
-              <div className="flex space-x-2 ml-4">
+              <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2 md:ml-4">
                 <Button
                   onClick={() => onEdit(experience)}
                   size="sm"
                   variant="outline"
-                  className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700 flex-1 md:flex-none"
                 >
-                  <Edit2 size={16} className="mr-1" />
-                  Edit
+                  <Edit2 size={14} className="mr-1" />
+                  <span className="hidden sm:inline">Edit</span>
                 </Button>
                 <Button
-                  onClick={() => {
-                    if (window.confirm('Are you sure you want to delete this experience?')) {
-                      deleteMutation.mutate(experience.id);
-                    }
-                  }}
+                  onClick={() => setDeleteConfirm({open: true, experience})}
                   size="sm"
                   variant="outline"
                   disabled={deleteMutation.isPending}
-                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white flex-1 md:flex-none"
                 >
-                  <Trash2 size={16} className="mr-1" />
-                  Delete
+                  <Trash2 size={14} className="mr-1" />
+                  <span className="hidden sm:inline">Delete</span>
                 </Button>
               </div>
             </div>
           </CardContent>
         </Card>
       ))}
+      
+      <ConfirmDialog
+        open={deleteConfirm.open}
+        onOpenChange={(open) => setDeleteConfirm({open, experience: null})}
+        title="Delete Experience"
+        description={`Are you sure you want to delete "${deleteConfirm.experience?.title}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+        icon={<Trash2 size={20} className="text-red-500" />}
+        onConfirm={() => {
+          if (deleteConfirm.experience) {
+            deleteMutation.mutate(deleteConfirm.experience.id);
+            setDeleteConfirm({open: false, experience: null});
+          }
+        }}
+      />
     </div>
   );
 }
@@ -152,22 +174,33 @@ export function SkillsList() {
     );
   }
 
+  const [deleteConfirm, setDeleteConfirm] = useState<{open: boolean, skill: Skill | null}>({
+    open: false,
+    skill: null
+  });
+
   return (
     <div className="space-y-4">
       {skills.map((skill) => (
-        <Card key={skill.id} className="bg-gray-700 border-gray-600">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
-                  <Star className="text-yellow-400" size={16} />
-                  <span className="text-white font-medium">{skill.name}</span>
+        <Card key={skill.id} className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0">
+              <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">{skill.icon}</span>
+                  <span className="text-white font-medium text-lg break-words">{skill.name}</span>
                 </div>
-                <Badge variant="outline" className="text-xs border-gray-500">
-                  {skill.level}%
-                </Badge>
+                <div className="flex items-center space-x-2">
+                  <Badge variant="outline" className="text-xs border-blue-400 text-blue-400">
+                    {skill.level}%
+                  </Badge>
+                  <div 
+                    className="w-4 h-4 rounded-full"
+                    style={{ backgroundColor: skill.color }}
+                  />
+                </div>
               </div>
-              <div className="flex space-x-2">
+              <div className="flex flex-row space-x-2">
                 <Dialog open={showForm && editingSkill?.id === skill.id} onOpenChange={(open) => {
                   setShowForm(open);
                   if (!open) setEditingSkill(null);
@@ -177,9 +210,10 @@ export function SkillsList() {
                       onClick={() => setEditingSkill(skill)}
                       size="sm"
                       variant="outline"
-                      className="border-gray-600 text-gray-300 hover:bg-gray-600"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-600 flex-1 md:flex-none"
                     >
-                      <Edit2 size={14} />
+                      <Edit2 size={14} className="mr-1" />
+                      <span className="hidden sm:inline">Edit</span>
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
@@ -193,23 +227,37 @@ export function SkillsList() {
                   </DialogContent>
                 </Dialog>
                 <Button
-                  onClick={() => {
-                    if (window.confirm('Are you sure you want to delete this skill?')) {
-                      deleteMutation.mutate(skill.id);
-                    }
-                  }}
+                  onClick={() => setDeleteConfirm({open: true, skill})}
                   size="sm"
                   variant="outline"
                   disabled={deleteMutation.isPending}
-                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white flex-1 md:flex-none"
                 >
-                  <Trash2 size={14} />
+                  <Trash2 size={14} className="mr-1" />
+                  <span className="hidden sm:inline">Delete</span>
                 </Button>
               </div>
             </div>
           </CardContent>
         </Card>
       ))}
+      
+      <ConfirmDialog
+        open={deleteConfirm.open}
+        onOpenChange={(open) => setDeleteConfirm({open, skill: null})}
+        title="Delete Skill"
+        description={`Are you sure you want to delete "${deleteConfirm.skill?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+        icon={<Trash2 size={20} className="text-red-500" />}
+        onConfirm={() => {
+          if (deleteConfirm.skill) {
+            deleteMutation.mutate(deleteConfirm.skill.id);
+            setDeleteConfirm({open: false, skill: null});
+          }
+        }}
+      />
     </div>
   );
 }
@@ -248,34 +296,42 @@ export function ServicesList() {
     );
   }
 
+  const [deleteConfirm, setDeleteConfirm] = useState<{open: boolean, service: Service | null}>({
+    open: false,
+    service: null
+  });
+
   return (
     <div className="space-y-4">
       {services.map((service) => (
-        <Card key={service.id} className="bg-gray-700 border-gray-600">
-          <CardContent className="p-4">
-            <div className="flex justify-between items-start">
+        <Card key={service.id} className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-start space-y-3 md:space-y-0">
               <div className="flex-1">
-                <h3 className="text-white font-semibold mb-2">{service.title}</h3>
-                <p className="text-gray-400 text-sm mb-2">{service.description}</p>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-2xl">{service.icon}</span>
+                  <h3 className="text-white font-semibold text-lg break-words">{service.title}</h3>
+                </div>
+                <p className="text-gray-400 text-sm mb-3 break-words">{service.description}</p>
                 {service.features && service.features.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {service.features.slice(0, 3).map((feature, index) => (
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {service.features.slice(0, 5).map((feature, index) => (
                       <Badge key={index} variant="secondary" className="text-xs">
                         {feature}
                       </Badge>
                     ))}
-                    {service.features.length > 3 && (
+                    {service.features.length > 5 && (
                       <Badge variant="outline" className="text-xs">
-                        +{service.features.length - 3} more
+                        +{service.features.length - 5} more
                       </Badge>
                     )}
                   </div>
                 )}
-                <div className="flex items-center space-x-4 text-sm text-gray-400">
-                  <span>₹{service.price}</span>
+                <div className="flex items-center space-x-4 text-sm text-green-400">
+                  <span className="font-medium">₹{service.price}</span>
                 </div>
               </div>
-              <div className="flex space-x-2">
+              <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2 md:ml-4">
                 <Dialog open={showForm && editingService?.id === service.id} onOpenChange={(open) => {
                   setShowForm(open);
                   if (!open) setEditingService(null);
@@ -285,9 +341,10 @@ export function ServicesList() {
                       onClick={() => setEditingService(service)}
                       size="sm"
                       variant="outline"
-                      className="border-gray-600 text-gray-300 hover:bg-gray-600"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-600 flex-1 md:flex-none"
                     >
-                      <Edit2 size={14} />
+                      <Edit2 size={14} className="mr-1" />
+                      <span className="hidden sm:inline">Edit</span>
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -301,23 +358,37 @@ export function ServicesList() {
                   </DialogContent>
                 </Dialog>
                 <Button
-                  onClick={() => {
-                    if (window.confirm('Are you sure you want to delete this service?')) {
-                      deleteMutation.mutate(service.id);
-                    }
-                  }}
+                  onClick={() => setDeleteConfirm({open: true, service})}
                   size="sm"
                   variant="outline"
                   disabled={deleteMutation.isPending}
-                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white flex-1 md:flex-none"
                 >
-                  <Trash2 size={14} />
+                  <Trash2 size={14} className="mr-1" />
+                  <span className="hidden sm:inline">Delete</span>
                 </Button>
               </div>
             </div>
           </CardContent>
         </Card>
       ))}
+      
+      <ConfirmDialog
+        open={deleteConfirm.open}
+        onOpenChange={(open) => setDeleteConfirm({open, service: null})}
+        title="Delete Service"
+        description={`Are you sure you want to delete "${deleteConfirm.service?.title}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+        icon={<Trash2 size={20} className="text-red-500" />}
+        onConfirm={() => {
+          if (deleteConfirm.service) {
+            deleteMutation.mutate(deleteConfirm.service.id);
+            setDeleteConfirm({open: false, service: null});
+          }
+        }}
+      />
     </div>
   );
 }
@@ -552,6 +623,165 @@ export function BlogPostsList() {
           </CardContent>
         </Card>
       ))}
+    </div>
+  );
+}
+
+// Newsletter List Component
+export function AdminNewsletterList() {
+  const { data: subscribers, isLoading } = useQuery({
+    queryKey: ["/api/newsletter"],
+  });
+
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiRequest("DELETE", `/api/newsletter/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/newsletter"] });
+      toast({
+        title: "Success",
+        description: "Newsletter subscriber deleted successfully!",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const toggleActiveMutation = useMutation({
+    mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) => {
+      const response = await apiRequest("PUT", `/api/newsletter/${id}`, { isActive });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/newsletter"] });
+      toast({
+        title: "Success",
+        description: "Subscriber status updated successfully!",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const [deleteConfirm, setDeleteConfirm] = useState<{open: boolean, subscriber: any | null}>({
+    open: false,
+    subscriber: null
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-gray-400">Loading newsletter subscribers...</div>
+      </div>
+    );
+  }
+
+  if (!subscribers || subscribers.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <Mail className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+        <h3 className="text-lg font-medium text-white mb-2">No Newsletter Subscribers</h3>
+        <p className="text-gray-400">Newsletter subscribers will appear here once users subscribe.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {subscribers.map((subscriber: any) => (
+        <Card key={subscriber.id} className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center space-y-3 md:space-y-0">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <Mail className="text-orange-400" size={20} />
+                  <span className="text-white font-medium text-lg break-words">{subscriber.email}</span>
+                </div>
+                <div className="flex flex-col md:flex-row md:items-center space-y-1 md:space-y-0 md:space-x-4 text-sm text-gray-400">
+                  <span>Subscribed: {format(new Date(subscriber.subscribedAt), "MMM dd, yyyy")}</span>
+                  {subscriber.unsubscribedAt && (
+                    <span>Unsubscribed: {format(new Date(subscriber.unsubscribedAt), "MMM dd, yyyy")}</span>
+                  )}
+                </div>
+                <div className="mt-2">
+                  <Badge 
+                    variant={subscriber.isActive ? "default" : "secondary"}
+                    className={subscriber.isActive ? "bg-green-600" : "bg-gray-600"}
+                  >
+                    {subscriber.isActive ? "Active" : "Inactive"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2 md:ml-4">
+                <Button
+                  onClick={() => toggleActiveMutation.mutate({ 
+                    id: subscriber.id, 
+                    isActive: !subscriber.isActive 
+                  })}
+                  size="sm"
+                  variant="outline"
+                  disabled={toggleActiveMutation.isPending}
+                  className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white flex-1 md:flex-none"
+                >
+                  {subscriber.isActive ? (
+                    <>
+                      <UserX size={14} className="mr-1" />
+                      <span className="hidden sm:inline">Deactivate</span>
+                    </>
+                  ) : (
+                    <>
+                      <UserCheck size={14} className="mr-1" />
+                      <span className="hidden sm:inline">Activate</span>
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={() => setDeleteConfirm({open: true, subscriber})}
+                  size="sm"
+                  variant="outline"
+                  disabled={deleteMutation.isPending}
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white flex-1 md:flex-none"
+                >
+                  <Trash2 size={14} className="mr-1" />
+                  <span className="hidden sm:inline">Delete</span>
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+      
+      <ConfirmDialog
+        open={deleteConfirm.open}
+        onOpenChange={(open) => setDeleteConfirm({open, subscriber: null})}
+        title="Delete Newsletter Subscriber"
+        description={`Are you sure you want to delete "${deleteConfirm.subscriber?.email}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+        icon={<Trash2 size={20} className="text-red-500" />}
+        onConfirm={() => {
+          if (deleteConfirm.subscriber) {
+            deleteMutation.mutate(deleteConfirm.subscriber.id);
+            setDeleteConfirm({open: false, subscriber: null});
+          }
+        }}
+      />
     </div>
   );
 }
