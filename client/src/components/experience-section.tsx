@@ -1,6 +1,29 @@
-import { EXPERIENCE_TIMELINE } from "@/lib/constants";
+import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { Experience } from "@shared/schema";
 
 export default function ExperienceSection() {
+  const { data: experiences = [], isLoading } = useQuery<Experience[]>({
+    queryKey: ["/api/experiences"],
+    queryFn: async () => {
+      const response = await apiRequest("GET", "/api/experiences");
+      return await response.json();
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <section id="experience" className="py-20 bg-dark-secondary relative">
+        <div className="container mx-auto px-6">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-tech-light mx-auto"></div>
+            <p className="text-gray-400 mt-4">Loading experiences...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="experience" className="py-20 bg-dark-secondary relative">
       <div className="container mx-auto px-6">
@@ -19,31 +42,37 @@ export default function ExperienceSection() {
           
           {/* Timeline items */}
           <div className="space-y-12">
-            {EXPERIENCE_TIMELINE.map((item, index) => (
-              <div key={index} className={`relative flex items-center ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
-                <div className={`absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 rounded-full border-4 border-dark-bg ${item.color}`} />
-                <div className={`ml-16 md:ml-0 md:w-1/2 ${index % 2 === 1 ? 'md:pl-8' : 'md:pr-8'}`}>
-                  <div className="glass-morphism rounded-xl p-6">
-                    <div className="text-sm text-neon-cyan mb-2">{item.period}</div>
-                    <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                    <p className="text-gray-400 mb-4">{item.company}</p>
-                    {item.gpa && (
-                      <div className="text-tech-light font-semibold mb-2">CGPA: {item.gpa}</div>
-                    )}
-                    {item.description && (
-                      <ul className="text-sm text-gray-300 space-y-2">
-                        {item.description.map((desc, i) => (
-                          <li key={i}>• {desc}</li>
-                        ))}
-                      </ul>
-                    )}
-                    {item.coursework && (
-                      <p className="text-sm text-gray-300">{item.coursework}</p>
-                    )}
+            {experiences.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-400 text-lg">No experiences found. Please add some experiences in the admin panel.</p>
+              </div>
+            ) : (
+              experiences.map((item, index) => (
+                <div key={item.id} className={`relative flex items-center ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
+                  <div className={`absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 rounded-full border-4 border-dark-bg`} style={{ backgroundColor: item.color }} />
+                  <div className={`ml-16 md:ml-0 md:w-1/2 ${index % 2 === 1 ? 'md:pl-8' : 'md:pr-8'}`}>
+                    <div className="glass-morphism rounded-xl p-6">
+                      <div className="text-sm text-neon-cyan mb-2">{item.period}</div>
+                      <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                      <p className="text-gray-400 mb-4">{item.company}</p>
+                      {item.gpa && (
+                        <div className="text-tech-light font-semibold mb-2">CGPA: {item.gpa}</div>
+                      )}
+                      {item.description && item.description.length > 0 && (
+                        <ul className="text-sm text-gray-300 space-y-2">
+                          {item.description.map((desc, i) => (
+                            <li key={i}>• {desc}</li>
+                          ))}
+                        </ul>
+                      )}
+                      {item.coursework && (
+                        <p className="text-sm text-gray-300">{item.coursework}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

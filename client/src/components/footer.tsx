@@ -1,16 +1,96 @@
-import { Linkedin, Github, Twitter } from "lucide-react";
+import { Linkedin, Github, Twitter, Mail, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        toast({
+          title: "Subscribed!",
+          description: "You've been added to our newsletter.",
+        });
+        setEmail("");
+      } else {
+        toast({
+          title: "Subscription failed",
+          description: data.message || "Something went wrong.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to subscribe. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <footer className="py-12 bg-dark-bg border-t border-gray-800">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <div className="text-2xl font-inter font-bold gradient-text mb-4">TECH2SAINI</div>
-            <p className="text-gray-400 max-w-md">
+            <p className="text-gray-400 max-w-md mb-6">
               Explore innovative solutions, personalized services, and projects tailored to your needs. 
               Let's create something exceptional together!
             </p>
+            
+            {/* Newsletter Subscription */}
+            <div className="max-w-md">
+              <h4 className="font-semibold mb-3 flex items-center gap-2">
+                <Mail size={18} className="text-tech-light" />
+                Newsletter
+              </h4>
+              <p className="text-gray-400 text-sm mb-4">
+                Get updates on new projects, blog posts, and tech insights.
+              </p>
+              <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-tech-light"
+                  required
+                />
+                <Button
+                  type="submit"
+                  disabled={isLoading || !email}
+                  className="bg-tech-light hover:bg-tech-light/80 text-white px-4 py-2"
+                >
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                  ) : (
+                    <ArrowRight size={16} />
+                  )}
+                </Button>
+              </form>
+            </div>
           </div>
           
           <div>

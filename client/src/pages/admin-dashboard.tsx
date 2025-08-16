@@ -16,20 +16,23 @@ import {
   Briefcase, 
   Star,
   Shield,
-  Plus
+  Plus,
+  Clock
 } from "lucide-react";
 import AdminSkillForm from "@/components/admin-skill-form";
 import AdminProjectForm from "@/components/admin-project-form";
 import AdminServiceForm from "@/components/admin-service-form";
 import AdminBlogForm from "@/components/admin-blog-form";
+import AdminExperienceForm from "@/components/admin-experience-form";
 import { 
   SkillsList, 
   ServicesList, 
   ProjectsList, 
   BlogPostsList, 
-  ContactMessagesList 
+  ContactMessagesList,
+  ExperiencesList 
 } from "@/components/admin-list-items";
-import type { Skill, Service, Project, BlogPost, ContactMessage } from "@shared/schema";
+import type { Skill, Service, Project, BlogPost, ContactMessage, Experience } from "@shared/schema";
 
 export default function AdminDashboard() {
   const { user, logoutMutation } = useAuth();
@@ -38,6 +41,8 @@ export default function AdminDashboard() {
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [showServiceForm, setShowServiceForm] = useState(false);
   const [showBlogForm, setShowBlogForm] = useState(false);
+  const [showExperienceForm, setShowExperienceForm] = useState(false);
+  const [editingExperience, setEditingExperience] = useState<Experience | null>(null);
 
   // Fetch data for stats
   const { data: skills = [] } = useQuery<Skill[]>({ queryKey: ["/api/skills"] });
@@ -48,6 +53,7 @@ export default function AdminDashboard() {
     queryFn: () => fetch("/api/blog-posts?published=false").then(res => res.json())
   });
   const { data: messages = [] } = useQuery<ContactMessage[]>({ queryKey: ["/api/contact-messages"] });
+  const { data: experiences = [] } = useQuery<Experience[]>({ queryKey: ["/api/experiences"] });
 
   if (!user) {
     setLocation("/admin/login");
@@ -64,6 +70,7 @@ export default function AdminDashboard() {
     { title: "Blog Posts", value: blogPosts.length.toString(), icon: FileText, color: "bg-green-500" },
     { title: "Projects", value: projects.length.toString(), icon: Code, color: "bg-purple-500" },
     { title: "Skills", value: skills.length.toString(), icon: Star, color: "bg-yellow-500" },
+    { title: "Experiences", value: experiences.length.toString(), icon: Clock, color: "bg-indigo-500" },
   ];
 
   return (
@@ -120,11 +127,12 @@ export default function AdminDashboard() {
 
         {/* Main Content */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 bg-dark-secondary gap-1">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 bg-dark-secondary gap-1">
             <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
             <TabsTrigger value="skills" className="text-xs sm:text-sm">Skills</TabsTrigger>
             <TabsTrigger value="services" className="text-xs sm:text-sm">Services</TabsTrigger>
             <TabsTrigger value="projects" className="text-xs sm:text-sm">Projects</TabsTrigger>
+            <TabsTrigger value="experiences" className="text-xs sm:text-sm">Experience</TabsTrigger>
             <TabsTrigger value="blog" className="text-xs sm:text-sm">Blog</TabsTrigger>
             <TabsTrigger value="messages" className="text-xs sm:text-sm">Messages</TabsTrigger>
             <TabsTrigger value="settings" className="text-xs sm:text-sm">Settings</TabsTrigger>
@@ -301,6 +309,49 @@ export default function AdminDashboard() {
               </CardHeader>
               <CardContent>
                 <BlogPostsList />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="experiences">
+            <Card className="bg-dark-secondary border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center justify-between">
+                  <span className="flex items-center">
+                    <Clock className="mr-2" size={20} />
+                    Manage Experiences
+                  </span>
+                  <Dialog open={showExperienceForm} onOpenChange={setShowExperienceForm}>
+                    <DialogTrigger asChild>
+                      <Button>
+                        <Plus className="mr-2" size={16} />
+                        Add Experience
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                      <AdminExperienceForm 
+                        editingExperience={editingExperience}
+                        onSuccess={() => {
+                          setShowExperienceForm(false);
+                          setEditingExperience(null);
+                        }}
+                      />
+                    </DialogContent>
+                  </Dialog>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ExperiencesList 
+                  experiences={experiences} 
+                  onEdit={(experience) => {
+                    setEditingExperience(experience);
+                    setShowExperienceForm(true);
+                  }}
+                  onDelete={(id) => {
+                    // Handle delete logic here
+                    console.log('Delete experience:', id);
+                  }}
+                />
               </CardContent>
             </Card>
           </TabsContent>
