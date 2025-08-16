@@ -38,9 +38,9 @@ import {
   ProjectsList, 
   BlogPostsList, 
   ContactMessagesList,
-  ExperiencesList,
   AdminNewsletterList 
 } from "@/components/admin-list-items";
+import { AdminExperiencesList } from "@/components/admin-experiences-list";
 import type { Skill, Service, Project, BlogPost, ContactMessage, Experience } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -73,6 +73,7 @@ export default function AdminDashboard() {
   const [showServiceForm, setShowServiceForm] = useState(false);
   const [showBlogForm, setShowBlogForm] = useState(false);
   const [showExperienceForm, setShowExperienceForm] = useState(false);
+  const [editingExperience, setEditingExperience] = useState<Experience | null>(null);
 
   // Fetch data for stats
   const { data: skills = [] } = useQuery<Skill[]>({ queryKey: ["/api/skills"] });
@@ -336,23 +337,7 @@ export default function AdminDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ExperiencesList 
-                experiences={experiences}
-                onEdit={(experience) => {
-                  // Handle edit functionality
-                  console.log('Edit experience:', experience);
-                }}
-                onDelete={async (id) => {
-                  // Handle delete functionality
-                  try {
-                    await apiRequest("DELETE", `/api/experiences/${id}`);
-                    // Invalidate queries to refresh data
-                    // queryClient.invalidateQueries({ queryKey: ["/api/experiences"] });
-                  } catch (error) {
-                    console.error('Failed to delete experience:', error);
-                  }
-                }}
-              />
+              <AdminExperiencesList />
             </CardContent>
           </Card>
         );

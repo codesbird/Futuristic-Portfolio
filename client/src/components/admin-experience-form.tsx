@@ -14,11 +14,11 @@ import { insertExperienceSchema, type InsertExperience, type Experience } from "
 import { apiRequest } from "@/lib/queryClient";
 
 interface ExperienceFormProps {
-  onSuccess?: () => void;
+  onClose?: () => void;
   editingExperience?: Experience | null;
 }
 
-export default function AdminExperienceForm({ onSuccess, editingExperience }: ExperienceFormProps) {
+export default function AdminExperienceForm({ onClose, editingExperience }: ExperienceFormProps) {
   const [descriptions, setDescriptions] = useState<string[]>([""]);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -59,7 +59,7 @@ export default function AdminExperienceForm({ onSuccess, editingExperience }: Ex
       });
       reset();
       setDescriptions([""]);
-      onSuccess?.();
+      onClose?.();
     },
     onError: (error: any) => {
       toast({
@@ -81,7 +81,7 @@ export default function AdminExperienceForm({ onSuccess, editingExperience }: Ex
         title: "Experience updated!",
         description: "The experience has been updated successfully.",
       });
-      onSuccess?.();
+      onClose?.();
     },
     onError: (error: any) => {
       toast({

@@ -431,6 +431,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin endpoint to delete newsletter subscriber
+  app.delete("/api/newsletter/:id", requireAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deleted = await storage.deleteNewsletterSubscriber(id);
+      
+      if (deleted) {
+        res.json({ success: true, message: "Subscriber deleted successfully" });
+      } else {
+        res.status(404).json({ success: false, message: "Subscriber not found" });
+      }
+    } catch (error) {
+      console.error("Error deleting newsletter subscriber:", error);
+      res.status(500).json({
+        success: false,
+        message: "Internal server error"
+      });
+    }
+  });
+
+  // Admin endpoint to update newsletter subscriber status
+  app.put("/api/newsletter/:id", requireAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { isActive } = req.body;
+      const updated = await storage.updateNewsletterSubscriber(id, { isActive });
+      
+      if (updated) {
+        res.json({ success: true, message: "Subscriber status updated successfully" });
+      } else {
+        res.status(404).json({ success: false, message: "Subscriber not found" });
+      }
+    } catch (error) {
+      console.error("Error updating newsletter subscriber:", error);
+      res.status(500).json({
+        success: false,
+        message: "Internal server error"
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

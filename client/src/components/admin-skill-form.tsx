@@ -19,26 +19,26 @@ interface SkillFormData {
 
 interface AdminSkillFormProps {
   onClose: () => void;
-  skill?: any;
+  editingSkill?: any;
 }
 
-export default function AdminSkillForm({ onClose, skill }: AdminSkillFormProps) {
+export default function AdminSkillForm({ onClose, editingSkill }: AdminSkillFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState<SkillFormData>({
-    name: skill?.name || "",
-    level: skill?.level || 75,
-    icon: skill?.icon || "⚡",
-    color: skill?.color || "#3b82f6",
-    isAdditional: skill?.isAdditional || false,
-    order: skill?.order || 1,
+    name: editingSkill?.name || "",
+    level: editingSkill?.level || 75,
+    icon: editingSkill?.icon || "⚡",
+    color: editingSkill?.color || "#3b82f6",
+    isAdditional: editingSkill?.isAdditional || false,
+    order: editingSkill?.order || 1,
   });
 
   const createSkillMutation = useMutation({
     mutationFn: async (data: SkillFormData) => {
-      const method = skill ? "PUT" : "POST";
-      const url = skill ? `/api/skills/${skill.id}` : "/api/skills";
+      const method = editingSkill ? "PUT" : "POST";
+      const url = editingSkill ? `/api/skills/${editingSkill.id}` : "/api/skills";
       const response = await apiRequest(method, url, data);
       return response.json();
     },
@@ -46,7 +46,7 @@ export default function AdminSkillForm({ onClose, skill }: AdminSkillFormProps) 
       queryClient.invalidateQueries({ queryKey: ["/api/skills"] });
       toast({
         title: "Success",
-        description: skill ? "Skill updated successfully!" : "Skill added successfully!",
+        description: editingSkill ? "Skill updated successfully!" : "Skill added successfully!",
       });
       onClose();
     },
@@ -67,7 +67,7 @@ export default function AdminSkillForm({ onClose, skill }: AdminSkillFormProps) 
   return (
     <Card className="bg-dark-secondary border-gray-700">
       <CardHeader>
-        <CardTitle className="text-white">{skill ? "Edit Skill" : "Add New Skill"}</CardTitle>
+        <CardTitle className="text-white">{editingSkill ? "Edit Skill" : "Add New Skill"}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">

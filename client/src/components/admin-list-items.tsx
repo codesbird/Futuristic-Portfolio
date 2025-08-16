@@ -630,7 +630,7 @@ export function BlogPostsList() {
 // Newsletter List Component
 export function AdminNewsletterList() {
   const { data: subscribers, isLoading } = useQuery({
-    queryKey: ["/api/newsletter"],
+    queryKey: ["/api/newsletter/subscribers"],
   });
 
   const queryClient = useQueryClient();
@@ -642,7 +642,7 @@ export function AdminNewsletterList() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/newsletter"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/newsletter/subscribers"] });
       toast({
         title: "Success",
         description: "Newsletter subscriber deleted successfully!",
@@ -663,7 +663,7 @@ export function AdminNewsletterList() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/newsletter"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/newsletter/subscribers"] });
       toast({
         title: "Success",
         description: "Subscriber status updated successfully!",
