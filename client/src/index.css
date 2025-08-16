@@ -184,3 +184,157 @@
 .animate-fade-in {
   animation: fade-in 1s ease-out;
 }
+
+/* Quill Editor Dark Theme Styles */
+.quill-wrapper .ql-toolbar {
+  background-color: hsl(228, 39%, 15%) !important;
+  border: 1px solid hsl(240, 20%, 25%) !important;
+  border-bottom: none !important;
+  border-radius: 6px 6px 0 0 !important;
+}
+
+.quill-wrapper .ql-toolbar .ql-stroke {
+  stroke: hsl(0, 0%, 80%) !important;
+}
+
+.quill-wrapper .ql-toolbar .ql-fill {
+  fill: hsl(0, 0%, 80%) !important;
+}
+
+.quill-wrapper .ql-toolbar .ql-picker-label {
+  color: hsl(0, 0%, 80%) !important;
+}
+
+.quill-wrapper .ql-toolbar .ql-picker-options {
+  background-color: hsl(228, 39%, 15%) !important;
+  border: 1px solid hsl(240, 20%, 25%) !important;
+}
+
+.quill-wrapper .ql-toolbar .ql-picker-item:hover {
+  background-color: hsl(240, 20%, 25%) !important;
+}
+
+.quill-wrapper .ql-container {
+  background-color: hsl(240, 30%, 4%) !important;
+  border: 1px solid hsl(240, 20%, 25%) !important;
+  border-radius: 0 0 6px 6px !important;
+  color: hsl(0, 0%, 100%) !important;
+}
+
+.quill-wrapper .ql-editor {
+  color: hsl(0, 0%, 100%) !important;
+  min-height: 150px;
+}
+
+.quill-wrapper .ql-editor.ql-blank::before {
+  color: hsl(240, 5%, 65%) !important;
+  font-style: italic;
+}
+
+.quill-wrapper .ql-editor h1,
+.quill-wrapper .ql-editor h2,
+.quill-wrapper .ql-editor h3,
+.quill-wrapper .ql-editor h4,
+.quill-wrapper .ql-editor h5,
+.quill-wrapper .ql-editor h6 {
+  color: hsl(203, 88%, 53%) !important;
+}
+
+.quill-wrapper .ql-editor a {
+  color: hsl(198, 100%, 50%) !important;
+}
+
+.quill-wrapper .ql-editor blockquote {
+  border-left: 4px solid hsl(203, 88%, 53%) !important;
+  background-color: hsl(240, 20%, 8%) !important;
+  color: hsl(0, 0%, 90%) !important;
+}
+
+.quill-wrapper .ql-editor code {
+  background-color: hsl(240, 20%, 8%) !important;
+  color: hsl(180, 100%, 50%) !important;
+  border: 1px solid hsl(240, 20%, 15%) !important;
+}
+
+.quill-wrapper .ql-editor pre {
+  background-color: hsl(240, 20%, 8%) !important;
+  border: 1px solid hsl(240, 20%, 15%) !important;
+  color: hsl(0, 0%, 90%) !important;
+}
+
+/* Rich Text Content Display Styles */
+.prose.prose-invert h1,
+.prose.prose-invert h2,
+.prose.prose-invert h3,
+.prose.prose-invert h4,
+.prose.prose-invert h5,
+.prose.prose-invert h6 {
+  color: hsl(203, 88%, 53%) !important;
+  font-weight: 600;
+}
+
+.prose.prose-invert a {
+  color: hsl(198, 100%, 50%) !important;
+  text-decoration: underline;
+}
+
+.prose.prose-invert a:hover {
+  color: hsl(180, 100%, 50%) !important;
+}
+
+.prose.prose-invert blockquote {
+  border-left: 4px solid hsl(203, 88%, 53%) !important;
+  background-color: hsl(240, 20%, 8%) !important;
+  color: hsl(0, 0%, 90%) !important;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.prose.prose-invert code {
+  background-color: hsl(240, 20%, 8%) !important;
+  color: hsl(180, 100%, 50%) !important;
+  border: 1px solid hsl(240, 20%, 15%) !important;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875em;
+}
+
+.prose.prose-invert pre {
+  background-color: hsl(240, 20%, 8%) !important;
+  border: 1px solid hsl(240, 20%, 15%) !important;
+  color: hsl(0, 0%, 90%) !important;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.prose.prose-invert pre code {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  color: inherit !important;
+}
+
+.prose.prose-invert ul,
+.prose.prose-invert ol {
+  color: hsl(0, 0%, 90%) !important;
+}
+
+.prose.prose-invert li {
+  margin: 0.5rem 0;
+}
+
+.prose.prose-invert strong {
+  color: hsl(0, 0%, 100%) !important;
+  font-weight: 600;
+}
+
+.prose.prose-invert em {
+  color: hsl(240, 5%, 75%) !important;
+}
+
+.prose.prose-invert img {
+  border-radius: 8px;
+  border: 1px solid hsl(240, 20%, 25%);
+}

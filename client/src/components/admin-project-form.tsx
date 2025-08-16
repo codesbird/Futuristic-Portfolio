@@ -8,6 +8,8 @@ import { Switch } from "@/components/ui/switch";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface ProjectFormData {
   title: string;
@@ -236,14 +238,32 @@ export default function AdminProjectForm({ onClose }: AdminProjectFormProps) {
           
           <div>
             <Label htmlFor="content" className="text-white">Detailed Content (Optional)</Label>
-            <Textarea
-              id="content"
-              value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              className="bg-dark-bg border-gray-600 text-white"
-              rows={4}
-              placeholder="Detailed project description for the project page..."
-            />
+            <div className="quill-wrapper">
+              <ReactQuill
+                theme="snow"
+                value={formData.content || ""}
+                onChange={(content) => setFormData({ ...formData, content })}
+                placeholder="Detailed project description for the project page..."
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['link', 'image'],
+                    ['clean'],
+                  ],
+                }}
+                formats={[
+                  'header', 'bold', 'italic', 'underline', 'strike',
+                  'list', 'bullet', 'link', 'image'
+                ]}
+                style={{
+                  backgroundColor: 'transparent',
+                  borderRadius: '6px',
+                  border: '1px solid #4b5563',
+                }}
+              />
+            </div>
           </div>
           
           <div className="flex items-center space-x-2">

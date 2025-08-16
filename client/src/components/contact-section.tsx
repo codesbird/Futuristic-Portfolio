@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Mail, Phone, MapPin, Linkedin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import emailjs from '@emailjs/browser';
 
 interface ContactForm {
   name: string;
@@ -24,7 +25,36 @@ export default function ContactSection() {
 
   const submitContactForm = useMutation({
     mutationFn: async (data: ContactForm) => {
-      return await apiRequest('POST', '/api/contact', data);
+      // Save to database
+      const dbResponse = await apiRequest('POST', '/api/contact', data);
+      
+      // Send email notification using EmailJS
+      const templateParams = {
+        from_name: data.name,
+        from_email: data.email,
+        phone: data.phone,
+        subject: data.subject,
+        message: data.message,
+        to_name: 'Monu Saini',
+      };
+      
+      try {
+        // Get EmailJS credentials from server-side endpoint
+        const configResponse = await fetch('/api/email-config');
+        const config = await configResponse.json();
+        
+        await emailjs.send(
+          config.serviceId,
+          config.templateId,
+          templateParams,
+          config.publicKey
+        );
+      } catch (emailError) {
+        console.warn('Email notification failed:', emailError);
+        // Don't fail the entire operation if email fails
+      }
+      
+      return dbResponse;
     },
     onSuccess: () => {
       toast({

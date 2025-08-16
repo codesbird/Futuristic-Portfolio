@@ -69,13 +69,13 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-dark-bg text-white">
       {/* Header */}
-      <div className="bg-dark-secondary border-b border-gray-700 p-6">
-        <div className="flex items-center justify-between">
+      <div className="bg-dark-secondary border-b border-gray-700 p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold gradient-text">TECH2SAINI Admin</h1>
-            <p className="text-gray-400">Content Management System</p>
+            <h1 className="text-xl md:text-2xl font-bold gradient-text">TECH2SAINI Admin</h1>
+            <p className="text-gray-400 text-sm md:text-base">Content Management System</p>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-r from-tech-blue to-neon-cyan rounded-full flex items-center justify-center">
                 <Users size={16} />
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
               variant="outline"
               size="sm"
               onClick={handleLogout}
-              className="border-gray-600 text-gray-300 hover:bg-gray-700"
+              className="border-gray-600 text-gray-300 hover:bg-gray-700 w-full sm:w-auto"
             >
               <LogOut size={16} className="mr-2" />
               Logout
@@ -95,7 +95,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="p-6">
+      <div className="p-4 md:p-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, index) => {
@@ -120,14 +120,14 @@ export default function AdminDashboard() {
 
         {/* Main Content */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7 bg-dark-secondary">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="skills">Skills</TabsTrigger>
-            <TabsTrigger value="services">Services</TabsTrigger>
-            <TabsTrigger value="projects">Projects</TabsTrigger>
-            <TabsTrigger value="blog">Blog</TabsTrigger>
-            <TabsTrigger value="messages">Messages</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 bg-dark-secondary gap-1">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
+            <TabsTrigger value="skills" className="text-xs sm:text-sm">Skills</TabsTrigger>
+            <TabsTrigger value="services" className="text-xs sm:text-sm">Services</TabsTrigger>
+            <TabsTrigger value="projects" className="text-xs sm:text-sm">Projects</TabsTrigger>
+            <TabsTrigger value="blog" className="text-xs sm:text-sm">Blog</TabsTrigger>
+            <TabsTrigger value="messages" className="text-xs sm:text-sm">Messages</TabsTrigger>
+            <TabsTrigger value="settings" className="text-xs sm:text-sm">Settings</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">

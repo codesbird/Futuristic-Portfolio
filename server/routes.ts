@@ -8,7 +8,8 @@ import {
   insertServiceSchema,
   insertProjectSchema,
   insertExperienceSchema,
-  insertBlogPostSchema 
+  insertBlogPostSchema,
+  insertNewsletterSubscriberSchema
 } from "@shared/schema";
 import { z } from "zod";
 
@@ -18,6 +19,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Initialize database with sample data
   initializeData();
+
+  // Email configuration endpoint
+  app.get("/api/email-config", (req, res) => {
+    res.json({
+      serviceId: process.env.EMAILJS_SERVICE_ID,
+      templateId: process.env.EMAILJS_TEMPLATE_ID,
+      publicKey: process.env.EMAILJS_PUBLIC_KEY,
+    });
+  });
   // Contact form submission endpoint
   app.post("/api/contact", async (req, res) => {
     try {
@@ -334,6 +344,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true });
     } catch (error: any) {
       res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Newsletter subscription endpoints
+  app.post("/api/newsletter/subscribe", async (req, res) => {
+    try {
+      const validatedData = insertNewsletterSubscriberSchema.parse(req.body);
+      
+      // Check if already subscribed
+      const isSubscribed = await storage.isEmailSubscribed(validatedData.email);
+      if (isSubscribed) {
+        return res.status(400).json({
+          success: false,
+          message: "Email is already subscribed to the newsletter"
+        });
+      }
+      
+      const subscriber = await storage.createNewsletterSubscriber(validatedData);
+      
+      res.json({
+        success: true,
+        message: "Successfully subscribed to newsletter!",
+        id: subscriber.id
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({
+          success: false,
+          message: "Invalid email address",
+          errors: error.errors
+        });
+      } else {
+        console.error("Error subscribing to newsletter:", error);
+        res.status(500).json({
+          success: false,
+          message: "Internal server error"
+        });
+      }
+    }
+  });
+
+  app.post("/api/newsletter/unsubscribe", async (req, res) => {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        return res.status(400).json({
+          success: false,
+          message: "Email is required"
+        });
+      }
+      
+      const unsubscribed = await storage.unsubscribeNewsletter(email);
+      
+      if (unsubscribed) {
+        res.json({
+          success: true,
+          message: "Successfully unsubscribed from newsletter"
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          message: "Email not found or already unsubscribed"
+        });
+      }
+    } catch (error) {
+      console.error("Error unsubscribing from newsletter:", error);
+      res.status(500).json({
+        success: false,
+        message: "Internal server error"
+      });
+    }
+  });
+
+  // Admin endpoint to get newsletter subscribers
+  app.get("/api/newsletter/subscribers", requireAuth, async (req, res) => {
+    try {
+      const subscribers = await storage.getNewsletterSubscribers();
+      res.json(subscribers);
+    } catch (error) {
+      console.error("Error fetching newsletter subscribers:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch subscribers"
+      });
     }
   });
 

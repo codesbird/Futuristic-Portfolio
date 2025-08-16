@@ -12,6 +12,8 @@ import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Trash2, Plus } from "lucide-react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface AdminBlogFormProps {
   onClose: () => void;
@@ -152,7 +154,34 @@ export default function AdminBlogForm({ onClose, blogPost }: AdminBlogFormProps)
               <FormItem>
                 <FormLabel className="text-white">Content</FormLabel>
                 <FormControl>
-                  <Textarea {...field} className="bg-dark-bg border-gray-600 text-white min-h-[200px]" />
+                  <div className="quill-wrapper">
+                    <ReactQuill
+                      theme="snow"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      placeholder="Write your blog post content here..."
+                      modules={{
+                        toolbar: [
+                          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                          [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+                          ['link', 'image', 'code-block'],
+                          [{ align: [] }],
+                          ['clean'],
+                        ],
+                      }}
+                      formats={[
+                        'header', 'bold', 'italic', 'underline', 'strike', 'blockquote',
+                        'list', 'bullet', 'indent', 'link', 'image', 'code-block', 'align'
+                      ]}
+                      style={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '6px',
+                        border: '1px solid #4b5563',
+                        minHeight: '200px',
+                      }}
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

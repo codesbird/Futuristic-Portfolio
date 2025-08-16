@@ -17,13 +17,16 @@ import {
   type InsertExperience,
   type BlogPost,
   type InsertBlogPost,
+  type NewsletterSubscriber,
+  type InsertNewsletterSubscriber,
   users,
   contactMessages,
   skills,
   services,
   projects,
   experiences,
-  blogPosts
+  blogPosts,
+  newsletterSubscribers
 } from "@shared/schema";
 
 // Database connection with error handling
@@ -94,6 +97,15 @@ export interface IStorage {
   getBlogPosts(publishedOnly?: boolean): Promise<BlogPost[]>;
   getBlogPost(id: string): Promise<BlogPost | undefined>;
   getBlogPostBySlug(slug: string): Promise<BlogPost | undefined>;
+  createBlogPost(blogPost: InsertBlogPost): Promise<BlogPost>;
+  updateBlogPost(id: string, blogPost: Partial<InsertBlogPost>): Promise<BlogPost | undefined>;
+  deleteBlogPost(id: string): Promise<boolean>;
+  
+  // Newsletter subscribers
+  getNewsletterSubscribers(): Promise<NewsletterSubscriber[]>;
+  createNewsletterSubscriber(subscriber: InsertNewsletterSubscriber): Promise<NewsletterSubscriber>;
+  unsubscribeNewsletter(email: string): Promise<boolean>;
+  isEmailSubscribed(email: string): Promise<boolean>;
   createBlogPost(post: InsertBlogPost): Promise<BlogPost>;
   updateBlogPost(id: string, post: Partial<InsertBlogPost>): Promise<BlogPost | undefined>;
   deleteBlogPost(id: string): Promise<boolean>;
@@ -108,6 +120,7 @@ export class MemoryStorage implements IStorage {
   private projects: Map<string, Project> = new Map();
   private experiences: Map<string, Experience> = new Map();
   private blogPosts: Map<string, BlogPost> = new Map();
+  private newsletterSubscribers: Map<string, NewsletterSubscriber> = new Map();
 
   // User management
   async getUser(id: string): Promise<User | undefined> {
@@ -448,6 +461,49 @@ export class MemoryStorage implements IStorage {
   async deleteBlogPost(id: string): Promise<boolean> {
     return this.blogPosts.delete(id);
   }
+
+  // Newsletter subscribers
+  async getNewsletterSubscribers(): Promise<NewsletterSubscriber[]> {
+    return Array.from(this.newsletterSubscribers.values())
+      .filter(sub => sub.isActive)
+      .sort((a, b) => b.subscribedAt.getTime() - a.subscribedAt.getTime());
+  }
+
+  async createNewsletterSubscriber(insertSubscriber: InsertNewsletterSubscriber): Promise<NewsletterSubscriber> {
+    const id = crypto.randomUUID();
+    const subscriber: NewsletterSubscriber = {
+      ...insertSubscriber,
+      id,
+      subscribedAt: new Date(),
+      unsubscribedAt: null,
+    };
+    this.newsletterSubscribers.set(id, subscriber);
+    return subscriber;
+  }
+
+  async unsubscribeNewsletter(email: string): Promise<boolean> {
+    for (const [id, subscriber] of this.newsletterSubscribers.entries()) {
+      if (subscriber.email === email && subscriber.isActive) {
+        const updated = {
+          ...subscriber,
+          isActive: false,
+          unsubscribedAt: new Date(),
+        };
+        this.newsletterSubscribers.set(id, updated);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  async isEmailSubscribed(email: string): Promise<boolean> {
+    for (const subscriber of this.newsletterSubscribers.values()) {
+      if (subscriber.email === email && subscriber.isActive) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 // Database storage implementation
@@ -605,6 +661,38 @@ export class DatabaseStorage implements IStorage {
   async deleteBlogPost(id: string): Promise<boolean> {
     await db.delete(blogPosts).where(eq(blogPosts.id, id));
     return true;
+  }
+
+  // Newsletter subscribers
+  async getNewsletterSubscribers(): Promise<NewsletterSubscriber[]> {
+    return await db.select().from(newsletterSubscribers)
+      .where(eq(newsletterSubscribers.isActive, true))
+      .orderBy(desc(newsletterSubscribers.subscribedAt));
+  }
+
+  async createNewsletterSubscriber(subscriber: InsertNewsletterSubscriber): Promise<NewsletterSubscriber> {
+    const result = await db.insert(newsletterSubscribers).values(subscriber).returning();
+    return result[0];
+  }
+
+  async unsubscribeNewsletter(email: string): Promise<boolean> {
+    const result = await db.update(newsletterSubscribers)
+      .set({
+        isActive: false,
+        unsubscribedAt: new Date(),
+      })
+      .where(eq(newsletterSubscribers.email, email))
+      .returning();
+    return result.length > 0;
+  }
+
+  async isEmailSubscribed(email: string): Promise<boolean> {
+    const result = await db.select()
+      .from(newsletterSubscribers)
+      .where(eq(newsletterSubscribers.email, email))
+      .where(eq(newsletterSubscribers.isActive, true))
+      .limit(1);
+    return result.length > 0;
   }
 }
 
