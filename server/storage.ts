@@ -141,6 +141,8 @@ export class MemoryStorage implements IStorage {
     const user: User = {
       ...insertUser,
       id,
+      twoFactorSecret: null,
+      twoFactorEnabled: null,
       createdAt: new Date(),
     };
     this.users.set(id, user);
@@ -238,7 +240,7 @@ export class MemoryStorage implements IStorage {
       icon: service.icon,
       description: service.description,
       price: service.price,
-      features: Array.from(service.features || []),
+      features: Array.from(service.features || []) as string[],
       order: service.order || null,
       id,
       createdAt: new Date(),
@@ -258,7 +260,7 @@ export class MemoryStorage implements IStorage {
       icon: service.icon || existing.icon,
       description: service.description || existing.description,
       price: service.price || existing.price,
-      features: service.features ? Array.from(service.features) : existing.features,
+      features: service.features ? Array.from(service.features) as string[] : existing.features,
       order: service.order !== undefined ? service.order : existing.order,
       updatedAt: new Date(),
     };
@@ -301,7 +303,7 @@ export class MemoryStorage implements IStorage {
       description: project.description,
       content: project.content || null,
       image: project.image,
-      technologies: Array.from(project.technologies || []),
+      technologies: Array.from(project.technologies || []) as string[],
       gradientFrom: project.gradientFrom,
       gradientTo: project.gradientTo,
       demoUrl: project.demoUrl || null,
@@ -326,7 +328,7 @@ export class MemoryStorage implements IStorage {
       description: project.description || existing.description,
       content: project.content !== undefined ? project.content : existing.content,
       image: project.image || existing.image,
-      technologies: project.technologies ? Array.from(project.technologies) : existing.technologies,
+      technologies: project.technologies ? Array.from(project.technologies) as string[] : existing.technologies,
       gradientFrom: project.gradientFrom || existing.gradientFrom,
       gradientTo: project.gradientTo || existing.gradientTo,
       demoUrl: project.demoUrl !== undefined ? project.demoUrl : existing.demoUrl,
@@ -361,7 +363,7 @@ export class MemoryStorage implements IStorage {
       color: experience.color,
       period: experience.period,
       company: experience.company,
-      description: experience.description ? Array.from(experience.description) : null,
+      description: experience.description ? Array.from(experience.description) as string[] : null,
       gpa: experience.gpa || null,
       coursework: experience.coursework || null,
       order: experience.order || null,
@@ -383,7 +385,7 @@ export class MemoryStorage implements IStorage {
       color: experience.color || existing.color,
       period: experience.period || existing.period,
       company: experience.company || existing.company,
-      description: experience.description ? Array.from(experience.description) : existing.description,
+      description: experience.description ? Array.from(experience.description) as string[] : existing.description,
       gpa: experience.gpa !== undefined ? experience.gpa : existing.gpa,
       coursework: experience.coursework !== undefined ? experience.coursework : existing.coursework,
       order: experience.order !== undefined ? experience.order : existing.order,
@@ -429,7 +431,7 @@ export class MemoryStorage implements IStorage {
       author: post.author,
       published: post.published || null,
       featuredImage: post.featuredImage || null,
-      tags: post.tags ? Array.from(post.tags) : null,
+      tags: post.tags ? Array.from(post.tags) as string[] : null,
       id,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -451,7 +453,7 @@ export class MemoryStorage implements IStorage {
       author: post.author || existing.author,
       published: post.published !== undefined ? post.published : existing.published,
       featuredImage: post.featuredImage !== undefined ? post.featuredImage : existing.featuredImage,
-      tags: post.tags ? Array.from(post.tags) : existing.tags,
+      tags: post.tags ? Array.from(post.tags) as string[] : existing.tags,
       updatedAt: new Date(),
     };
     this.blogPosts.set(id, updated);
@@ -474,6 +476,7 @@ export class MemoryStorage implements IStorage {
     const subscriber: NewsletterSubscriber = {
       ...insertSubscriber,
       id,
+      isActive: insertSubscriber.isActive ?? true,
       subscribedAt: new Date(),
       unsubscribedAt: null,
     };
@@ -482,7 +485,7 @@ export class MemoryStorage implements IStorage {
   }
 
   async unsubscribeNewsletter(email: string): Promise<boolean> {
-    for (const [id, subscriber] of this.newsletterSubscribers.entries()) {
+    for (const [id, subscriber] of Array.from(this.newsletterSubscribers.entries())) {
       if (subscriber.email === email && subscriber.isActive) {
         const updated = {
           ...subscriber,
@@ -497,7 +500,7 @@ export class MemoryStorage implements IStorage {
   }
 
   async isEmailSubscribed(email: string): Promise<boolean> {
-    for (const subscriber of this.newsletterSubscribers.values()) {
+    for (const subscriber of Array.from(this.newsletterSubscribers.values())) {
       if (subscriber.email === email && subscriber.isActive) {
         return true;
       }
