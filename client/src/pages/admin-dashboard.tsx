@@ -126,22 +126,7 @@ export default function AdminDashboard() {
 
   const renderDashboard = () => (
     <div className="space-y-6">
-      {/* Dashboard Cards Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {dashboardCards.map((card, index) => {
-          const Icon = card.icon;
-          return (
-            <Card key={index} className={`bg-gradient-to-br ${card.color} border-0 cursor-pointer hover:scale-105 transition-transform`}>
-              <CardContent className="p-4 md:p-6 text-center">
-                <Icon className={`mx-auto mb-2 ${card.textColor}`} size={32} />
-                <h3 className={`font-semibold text-sm md:text-base ${card.textColor}`}>{card.title}</h3>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Overview Section */}
+      {/* Portfolio Overview Section */}
       <div className="bg-gray-800 rounded-lg p-6">
         <h2 className="text-xl font-semibold text-white mb-4">Portfolio Overview</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -449,7 +434,7 @@ export default function AdminDashboard() {
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded flex items-center justify-center">
               <Layout className="text-white" size={16} />
             </div>
-            <h1 className="text-white font-bold text-lg">Matrix Admin</h1>
+            <h1 className="text-white font-bold text-lg">{user.name} Admin</h1>
           </div>
         </div>
 
@@ -493,12 +478,6 @@ export default function AdminDashboard() {
               </Button>
               <div>
                 <h1 className="text-white font-semibold capitalize">{activeTab}</h1>
-                <div className="flex items-center space-x-2 text-sm text-gray-400">
-                  <Home size={14} />
-                  <span>Home</span>
-                  <span>/</span>
-                  <span>Library</span>
-                </div>
               </div>
             </div>
             

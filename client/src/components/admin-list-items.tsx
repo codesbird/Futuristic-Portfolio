@@ -118,9 +118,519 @@ export function ExperiencesList({ experiences, onEdit, onDelete }: {
   );
 }
 
-// Export placeholder for other components
-export function SkillsList() { return <div>Skills management placeholder</div>; }
-export function ServicesList() { return <div>Services management placeholder</div>; }
-export function ProjectsList() { return <div>Projects management placeholder</div>; }
-export function BlogPostsList() { return <div>Blog posts management placeholder</div>; }
-export function ContactMessagesList() { return <div>Contact messages placeholder</div>; }
+// Skills List Component
+export function SkillsList() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
+  const [showForm, setShowForm] = useState(false);
+
+  const { data: skills = [], isLoading } = useQuery<Skill[]>({ 
+    queryKey: ["/api/skills"] 
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/skills/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/skills"] });
+      toast({ title: "Skill deleted successfully!" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error deleting skill", description: error.message, variant: "destructive" });
+    },
+  });
+
+  if (isLoading) {
+    return <div className="text-gray-400 text-center py-8">Loading skills...</div>;
+  }
+
+  if (skills.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-400">
+        <p>No skills found. Create your first skill!</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {skills.map((skill) => (
+        <Card key={skill.id} className="bg-gray-700 border-gray-600">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
+                  <Star className="text-yellow-400" size={16} />
+                  <span className="text-white font-medium">{skill.name}</span>
+                </div>
+                <Badge variant="outline" className="text-xs border-gray-500">
+                  {skill.level}%
+                </Badge>
+              </div>
+              <div className="flex space-x-2">
+                <Dialog open={showForm && editingSkill?.id === skill.id} onOpenChange={(open) => {
+                  setShowForm(open);
+                  if (!open) setEditingSkill(null);
+                }}>
+                  <DialogTrigger asChild>
+                    <Button
+                      onClick={() => setEditingSkill(skill)}
+                      size="sm"
+                      variant="outline"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-600"
+                    >
+                      <Edit2 size={14} />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <AdminSkillForm 
+                      editingSkill={editingSkill} 
+                      onClose={() => {
+                        setShowForm(false);
+                        setEditingSkill(null);
+                      }} 
+                    />
+                  </DialogContent>
+                </Dialog>
+                <Button
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to delete this skill?')) {
+                      deleteMutation.mutate(skill.id);
+                    }
+                  }}
+                  size="sm"
+                  variant="outline"
+                  disabled={deleteMutation.isPending}
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                >
+                  <Trash2 size={14} />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+// Services List Component
+export function ServicesList() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [editingService, setEditingService] = useState<Service | null>(null);
+  const [showForm, setShowForm] = useState(false);
+
+  const { data: services = [], isLoading } = useQuery<Service[]>({ 
+    queryKey: ["/api/services"] 
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/services/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/services"] });
+      toast({ title: "Service deleted successfully!" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error deleting service", description: error.message, variant: "destructive" });
+    },
+  });
+
+  if (isLoading) {
+    return <div className="text-gray-400 text-center py-8">Loading services...</div>;
+  }
+
+  if (services.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-400">
+        <p>No services found. Create your first service!</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {services.map((service) => (
+        <Card key={service.id} className="bg-gray-700 border-gray-600">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h3 className="text-white font-semibold mb-2">{service.title}</h3>
+                <p className="text-gray-400 text-sm mb-2">{service.description}</p>
+                {service.features && service.features.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {service.features.slice(0, 3).map((feature, index) => (
+                      <Badge key={index} variant="secondary" className="text-xs">
+                        {feature}
+                      </Badge>
+                    ))}
+                    {service.features.length > 3 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{service.features.length - 3} more
+                      </Badge>
+                    )}
+                  </div>
+                )}
+                <div className="flex items-center space-x-4 text-sm text-gray-400">
+                  <span>₹{service.price}</span>
+                </div>
+              </div>
+              <div className="flex space-x-2">
+                <Dialog open={showForm && editingService?.id === service.id} onOpenChange={(open) => {
+                  setShowForm(open);
+                  if (!open) setEditingService(null);
+                }}>
+                  <DialogTrigger asChild>
+                    <Button
+                      onClick={() => setEditingService(service)}
+                      size="sm"
+                      variant="outline"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-600"
+                    >
+                      <Edit2 size={14} />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <AdminServiceForm 
+                      editingService={editingService} 
+                      onClose={() => {
+                        setShowForm(false);
+                        setEditingService(null);
+                      }} 
+                    />
+                  </DialogContent>
+                </Dialog>
+                <Button
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to delete this service?')) {
+                      deleteMutation.mutate(service.id);
+                    }
+                  }}
+                  size="sm"
+                  variant="outline"
+                  disabled={deleteMutation.isPending}
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                >
+                  <Trash2 size={14} />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+// Projects List Component
+export function ProjectsList() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [showForm, setShowForm] = useState(false);
+
+  const { data: projects = [], isLoading } = useQuery<Project[]>({ 
+    queryKey: ["/api/projects"] 
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/projects/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      toast({ title: "Project deleted successfully!" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error deleting project", description: error.message, variant: "destructive" });
+    },
+  });
+
+  if (isLoading) {
+    return <div className="text-gray-400 text-center py-8">Loading projects...</div>;
+  }
+
+  if (projects.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-400">
+        <p>No projects found. Create your first project!</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {projects.map((project) => (
+        <Card key={project.id} className="bg-gray-700 border-gray-600">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h3 className="text-white font-semibold mb-2">{project.title}</h3>
+                <p className="text-gray-400 text-sm mb-2">{project.description}</p>
+                {project.technologies && project.technologies.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {project.technologies.slice(0, 4).map((tech, index) => (
+                      <Badge key={index} variant="outline" className="text-xs border-blue-400 text-blue-400">
+                        {tech}
+                      </Badge>
+                    ))}
+                    {project.technologies.length > 4 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{project.technologies.length - 4} more
+                      </Badge>
+                    )}
+                  </div>
+                )}
+                <div className="flex items-center space-x-4 text-sm text-gray-400">
+                  {project.githubUrl && (
+                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" 
+                       className="hover:text-white">
+                      GitHub
+                    </a>
+                  )}
+                  {project.demoUrl && (
+                    <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" 
+                       className="hover:text-white">
+                      Live Demo
+                    </a>
+                  )}
+                </div>
+              </div>
+              <div className="flex space-x-2">
+                <Dialog open={showForm && editingProject?.id === project.id} onOpenChange={(open) => {
+                  setShowForm(open);
+                  if (!open) setEditingProject(null);
+                }}>
+                  <DialogTrigger asChild>
+                    <Button
+                      onClick={() => setEditingProject(project)}
+                      size="sm"
+                      variant="outline"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-600"
+                    >
+                      <Edit2 size={14} />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <AdminProjectForm 
+                      editingProject={editingProject} 
+                      onClose={() => {
+                        setShowForm(false);
+                        setEditingProject(null);
+                      }} 
+                    />
+                  </DialogContent>
+                </Dialog>
+                <Button
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to delete this project?')) {
+                      deleteMutation.mutate(project.id);
+                    }
+                  }}
+                  size="sm"
+                  variant="outline"
+                  disabled={deleteMutation.isPending}
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                >
+                  <Trash2 size={14} />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+// Blog Posts List Component
+export function BlogPostsList() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [showForm, setShowForm] = useState(false);
+
+  const { data: blogPosts = [], isLoading } = useQuery<BlogPost[]>({ 
+    queryKey: ["/api/blog-posts"], 
+    queryFn: () => fetch("/api/blog-posts?published=false").then(res => res.json())
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/blog-posts/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/blog-posts"] });
+      toast({ title: "Blog post deleted successfully!" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error deleting blog post", description: error.message, variant: "destructive" });
+    },
+  });
+
+  if (isLoading) {
+    return <div className="text-gray-400 text-center py-8">Loading blog posts...</div>;
+  }
+
+  if (blogPosts.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-400">
+        <p>No blog posts found. Create your first blog post!</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {blogPosts.map((post) => (
+        <Card key={post.id} className="bg-gray-700 border-gray-600">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h3 className="text-white font-semibold mb-2">{post.title}</h3>
+                <p className="text-gray-400 text-sm mb-2">{post.excerpt}</p>
+                {post.tags && post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {post.tags.slice(0, 3).map((tag, index) => (
+                      <Badge key={index} variant="secondary" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                    {post.tags.length > 3 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{post.tags.length - 3} more
+                      </Badge>
+                    )}
+                  </div>
+                )}
+                <div className="flex items-center space-x-4 text-sm text-gray-400">
+                  <span className="flex items-center">
+                    <Calendar size={12} className="mr-1" />
+                    {format(new Date(post.createdAt), 'MMM dd, yyyy')}
+                  </span>
+                  <Badge variant={post.published ? "default" : "secondary"} className="text-xs">
+                    {post.published ? "Published" : "Draft"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="flex space-x-2">
+                <Dialog open={showForm && editingPost?.id === post.id} onOpenChange={(open) => {
+                  setShowForm(open);
+                  if (!open) setEditingPost(null);
+                }}>
+                  <DialogTrigger asChild>
+                    <Button
+                      onClick={() => setEditingPost(post)}
+                      size="sm"
+                      variant="outline"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-600"
+                    >
+                      <Edit2 size={14} />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <AdminBlogForm 
+                      editingPost={editingPost} 
+                      onClose={() => {
+                        setShowForm(false);
+                        setEditingPost(null);
+                      }} 
+                    />
+                  </DialogContent>
+                </Dialog>
+                <Button
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to delete this blog post?')) {
+                      deleteMutation.mutate(post.id);
+                    }
+                  }}
+                  size="sm"
+                  variant="outline"
+                  disabled={deleteMutation.isPending}
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                >
+                  <Trash2 size={14} />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+// Contact Messages List Component
+export function ContactMessagesList() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { data: messages = [], isLoading } = useQuery<ContactMessage[]>({ 
+    queryKey: ["/api/contact-messages"] 
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/contact-messages/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/contact-messages"] });
+      toast({ title: "Message deleted successfully!" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error deleting message", description: error.message, variant: "destructive" });
+    },
+  });
+
+  if (isLoading) {
+    return <div className="text-gray-400 text-center py-8">Loading messages...</div>;
+  }
+
+  if (messages.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-400">
+        <p>No contact messages found.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {messages.map((message) => (
+        <Card key={message.id} className="bg-gray-700 border-gray-600">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h3 className="text-white font-semibold mb-2">{message.subject}</h3>
+                <div className="flex items-center space-x-4 text-sm text-gray-400 mb-2">
+                  <span className="flex items-center">
+                    <User size={12} className="mr-1" />
+                    {message.name}
+                  </span>
+                  <span className="flex items-center">
+                    <Mail size={12} className="mr-1" />
+                    {message.email}
+                  </span>
+                  <span className="flex items-center">
+                    <Calendar size={12} className="mr-1" />
+                    {format(new Date(message.createdAt), 'MMM dd, yyyy')}
+                  </span>
+                </div>
+                <p className="text-gray-300 text-sm">{message.message}</p>
+              </div>
+              <div className="flex space-x-2">
+                <Button
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to delete this message?')) {
+                      deleteMutation.mutate(message.id);
+                    }
+                  }}
+                  size="sm"
+                  variant="outline"
+                  disabled={deleteMutation.isPending}
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                >
+                  <Trash2 size={14} />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
