@@ -119,15 +119,17 @@ export default function HeroSection() {
           {/* Right side - AI Visual */}
           <div className="relative animate-fade-in" style={{ animationDelay: '0.5s' }}>
             <div className="relative max-w-lg mx-auto">
-              {/* AI Agent placeholder - will be replaced with generated image */}
+              {/* AI Agent with generated image */}
               <div className="aspect-video bg-gradient-to-br from-tech-light/20 to-neon-cyan/20 rounded-2xl relative overflow-hidden">
-                <div className="absolute inset-0 bg-grid-pattern opacity-30" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <Brain className="w-24 h-24 text-tech-light mx-auto mb-4 animate-pulse" />
-                    <div className="text-lg font-semibold text-white">AI Agent</div>
-                    <div className="text-sm text-gray-300">Powered by Intelligence</div>
-                  </div>
+                <img 
+                  src="/attached_assets/generated_images/Futuristic_AI_agent_visual_572bc57b.png" 
+                  alt="Futuristic AI Agent" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-80"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-dark-bg/80 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="text-lg font-semibold text-white">AI-Powered Development</div>
+                  <div className="text-sm text-gray-300">Next-Gen Solutions</div>
                 </div>
                 
                 {/* Floating data points */}
