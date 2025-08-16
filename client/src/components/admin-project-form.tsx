@@ -100,8 +100,8 @@ export default function AdminProjectForm({ onClose }: AdminProjectFormProps) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
+          <div className="grid grid-cols-10 gap-4">
+            <div className="col-span-8">
               <Label htmlFor="title" className="text-white">Project Title</Label>
               <Input
                 id="title"
@@ -112,7 +112,7 @@ export default function AdminProjectForm({ onClose }: AdminProjectFormProps) {
               />
             </div>
             
-            <div>
+            <div className="col-span-2">
               <Label htmlFor="order" className="text-white">Display Order</Label>
               <Input
                 id="order"
@@ -184,8 +184,8 @@ export default function AdminProjectForm({ onClose }: AdminProjectFormProps) {
             </div>
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
-            <div>
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
               <Label htmlFor="gradientFrom" className="text-white">Gradient Start Color</Label>
               <Input
                 id="gradientFrom"
@@ -197,7 +197,7 @@ export default function AdminProjectForm({ onClose }: AdminProjectFormProps) {
               />
             </div>
             
-            <div>
+            <div className="flex-1">
               <Label htmlFor="gradientTo" className="text-white">Gradient End Color</Label>
               <Input
                 id="gradientTo"
@@ -209,8 +209,8 @@ export default function AdminProjectForm({ onClose }: AdminProjectFormProps) {
               />
             </div>
           </div>
-          
-          <div className="grid grid-cols-2 gap-4">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="demoUrl" className="text-white">Demo URL (Optional)</Label>
               <Input

@@ -65,12 +65,12 @@ export default function AdminBlogForm({ onClose, blogPost }: AdminBlogFormProps)
 
   const onSubmit = (data: InsertBlogPost) => {
     const filteredTags = tags.filter(tag => tag.trim() !== "");
-    const postData = { 
-      ...data, 
+    const postData = {
+      ...data,
       tags: filteredTags,
       slug: data.slug || data.title.toLowerCase().replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')
     };
-    
+
     if (blogPost) {
       updateMutation.mutate(postData);
     } else {
@@ -150,42 +150,75 @@ export default function AdminBlogForm({ onClose, blogPost }: AdminBlogFormProps)
           <FormField
             control={form.control}
             name="content"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">Content</FormLabel>
-                <FormControl>
-                  <div className="quill-wrapper">
-                    <ReactQuill
-                      theme="snow"
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      placeholder="Write your blog post content here..."
-                      modules={{
-                        toolbar: [
-                          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                          [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-                          ['link', 'image', 'code-block'],
-                          [{ align: [] }],
-                          ['clean'],
-                        ],
-                      }}
-                      formats={[
-                        'header', 'bold', 'italic', 'underline', 'strike', 'blockquote',
-                        'list', 'bullet', 'indent', 'link', 'image', 'code-block', 'align'
-                      ]}
-                      style={{
-                        backgroundColor: 'transparent',
-                        borderRadius: '6px',
-                        border: '1px solid #4b5563',
-                        minHeight: '200px',
-                      }}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              const [showHtml, setShowHtml] = useState(false);
+
+              return (
+                <FormItem>
+                  <FormLabel className="text-white">Content</FormLabel>
+                  <FormControl>
+                    <div className="quill-wrapper">
+                      {/* Toggle button */}
+                      <button
+                        type="button"
+                        onClick={() => setShowHtml(!showHtml)}
+                        className="mb-2 px-3 py-1 bg-gray-700 text-white rounded"
+                      >
+                        {showHtml ? "Editor" : "</> HTML"}
+                      </button>
+
+                      {/* Conditional view */}
+                      {showHtml ? (
+                        <textarea
+                          className="w-full h-64 p-2 border border-gray-600 bg-dark-bg text-white rounded"
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value)}
+                        />
+                      ) : (
+                        <ReactQuill
+                          theme="snow"
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          placeholder="Write your blog post content here..."
+                          modules={{
+                            toolbar: [
+                              [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                              ["bold", "italic", "underline", "strike", "blockquote"],
+                              [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
+                              ["link", "image", "code-block"],
+                              [{ align: [] }],
+                              ["clean"],
+                            ],
+                          }}
+                          formats={[
+                            "header",
+                            "bold",
+                            "italic",
+                            "underline",
+                            "strike",
+                            "blockquote",
+                            "list",
+                            "bullet",
+                            "indent",
+                            "link",
+                            "image",
+                            "code-block",
+                            "align",
+                          ]}
+                          style={{
+                            backgroundColor: "transparent",
+                            borderRadius: "6px",
+                            border: "1px solid #4b5563",
+                            minHeight: "200px",
+                          }}
+                        />
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
 
           <FormField
@@ -289,8 +322,8 @@ export default function AdminBlogForm({ onClose, blogPost }: AdminBlogFormProps)
               {createMutation.isPending || updateMutation.isPending
                 ? "Saving..."
                 : blogPost
-                ? "Update Post"
-                : "Create Post"}
+                  ? "Update Post"
+                  : "Create Post"}
             </Button>
           </div>
         </form>

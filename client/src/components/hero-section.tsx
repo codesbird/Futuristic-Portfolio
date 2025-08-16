@@ -45,7 +45,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{marginTop: '80px'}}>
       {/* Background with parallax effect */}
       <div 
         className="absolute inset-0 parallax opacity-30"

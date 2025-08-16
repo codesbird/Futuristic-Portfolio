@@ -34,10 +34,10 @@ export default function BlogSection() {
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogPosts.slice(0, 3).map((post, index) => (
-            <Link key={post.id} href={`/blog/${post.slug}`}>
+            <Link key={post.id} to={`/blog/${post.slug}`}>
               <div className="glass-morphism rounded-xl overflow-hidden group hover:scale-105 transition-all duration-300 cursor-pointer">
                 <div className="p-6">
-                  <div className="text-sm text-neon-cyan mb-2">{format(new Date(post.createdAt), "MMM dd, yyyy")}</div>
+                  <div className="text-sm text-neon-cyan mb-2">{format(new Date(post.createdAt), "MMMM dd, yyyy")}</div>
                   <h3 className="text-lg font-bold mb-3 group-hover:text-tech-light transition-colors">
                     {post.title}
                   </h3>

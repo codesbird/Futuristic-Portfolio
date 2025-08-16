@@ -83,7 +83,7 @@ export function SkillsList() {
                         variant="outline"
                         size="sm"
                         onClick={() => setEditingSkill(skill)}
-                        className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                        className="border-gray-600 text-gray-300 hover:bg-gray-700 py-0 px-2"
                       >
                         <Edit size={12} />
                       </Button>
@@ -100,15 +100,15 @@ export function SkillsList() {
                     size="sm"
                     onClick={() => deleteMutation.mutate(skill.id)}
                     disabled={deleteMutation.isPending}
-                    className="border-red-600 text-red-400 hover:bg-red-900"
+                    className="border-red-600 text-red-400 hover:bg-red-900 py-0 px-2"
                   >
                     <Trash2 size={12} />
                   </Button>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-start gap-2">
                 <span className="text-sm text-gray-400">Level: {skill.level}%</span>
-                <div className="w-24 bg-gray-700 rounded-full h-2">
+                <div className="bg-gray-700 rounded-full h-2" style={{ width: "78%" }}>
                   <div 
                     className="h-2 rounded-full"
                     style={{ 
@@ -186,7 +186,7 @@ export function ServicesList() {
                         variant="outline"
                         size="sm"
                         onClick={() => setEditingService(service)}
-                        className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                        className="border-gray-600 text-gray-300 hover:bg-gray-700 py-0 px-2"
                       >
                         <Edit size={12} />
                       </Button>
@@ -203,7 +203,7 @@ export function ServicesList() {
                     size="sm"
                     onClick={() => deleteMutation.mutate(service.id)}
                     disabled={deleteMutation.isPending}
-                    className="border-red-600 text-red-400 hover:bg-red-900"
+                    className="border-red-600 text-red-400 hover:bg-red-900 py-0 px-2"
                   >
                     <Trash2 size={12} />
                   </Button>
@@ -285,9 +285,9 @@ export function ProjectsList() {
                         variant="outline"
                         size="sm"
                         onClick={() => setEditingProject(project)}
-                        className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                        className="border-gray-600 text-gray-300 hover:bg-gray-700 py-0 px-2"
                       >
-                        <Edit size={12} />
+                        <Edit size={8} />
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -302,9 +302,9 @@ export function ProjectsList() {
                     size="sm"
                     onClick={() => deleteMutation.mutate(project.id)}
                     disabled={deleteMutation.isPending}
-                    className="border-red-600 text-red-400 hover:bg-red-900"
+                    className="border-red-600 text-red-400 hover:bg-red-900 py-0 px-2"
                   >
-                    <Trash2 size={12} />
+                    <Trash2 size={8} />
                   </Button>
                 </div>
               </div>
@@ -427,7 +427,7 @@ export function BlogPostsList() {
                         variant="outline"
                         size="sm"
                         onClick={() => setEditingPost(post)}
-                        className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                        className="border-gray-600 text-gray-300 hover:bg-gray-700 py-0 px-2"
                       >
                         <Edit size={12} />
                       </Button>
@@ -444,7 +444,7 @@ export function BlogPostsList() {
                     size="sm"
                     onClick={() => deleteMutation.mutate(post.id)}
                     disabled={deleteMutation.isPending}
-                    className="border-red-600 text-red-400 hover:bg-red-900"
+                    className="border-red-600 text-red-400 hover:bg-red-900 py-0 px-2"
                   >
                     <Trash2 size={12} />
                   </Button>
