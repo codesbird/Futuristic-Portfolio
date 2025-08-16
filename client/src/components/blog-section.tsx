@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
+import { Link } from "wouter";
 import type { BlogPost } from "@shared/schema";
 import { format } from "date-fns";
 
@@ -33,24 +34,23 @@ export default function BlogSection() {
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogPosts.slice(0, 3).map((post, index) => (
-            <div 
-              key={post.id}
-              className="glass-morphism rounded-xl overflow-hidden group hover:scale-105 transition-all duration-300"
-            >
-              <div className="p-6">
-                <div className="text-sm text-neon-cyan mb-2">{format(new Date(post.createdAt), "MMM dd, yyyy")}</div>
-                <h3 className="text-lg font-bold mb-3 group-hover:text-tech-light transition-colors">
-                  {post.title}
-                </h3>
-                <p className="text-gray-400 text-sm mb-4">
-                  {post.excerpt}
-                </p>
-                <div className="text-xs text-gray-500 mb-4">Author: {post.author}</div>
-                <button className="inline-flex items-center text-tech-light hover:text-neon-cyan transition-colors text-sm">
-                  Read More <ArrowRight size={14} className="ml-2" />
-                </button>
+            <Link key={post.id} href={`/blog/${post.slug}`}>
+              <div className="glass-morphism rounded-xl overflow-hidden group hover:scale-105 transition-all duration-300 cursor-pointer">
+                <div className="p-6">
+                  <div className="text-sm text-neon-cyan mb-2">{format(new Date(post.createdAt), "MMM dd, yyyy")}</div>
+                  <h3 className="text-lg font-bold mb-3 group-hover:text-tech-light transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="text-gray-400 text-sm mb-4">
+                    {post.excerpt}
+                  </p>
+                  <div className="text-xs text-gray-500 mb-4">Author: {post.author}</div>
+                  <button className="inline-flex items-center text-tech-light hover:text-neon-cyan transition-colors text-sm">
+                    Read More <ArrowRight size={14} className="ml-2" />
+                  </button>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
