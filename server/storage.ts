@@ -19,45 +19,6 @@ import {
   type InsertNewsletterSubscriber
 } from "@shared/schema";
 
-// Supabase client setup
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-let supabase: any = null;
-let dbConnected = false;
-
-async function initializeSupabase() {
-  try {
-    if (!supabaseUrl || !supabaseServiceKey) {
-      throw new Error("Supabase credentials not provided");
-    }
-    
-    supabase = createClient(supabaseUrl, supabaseServiceKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
-    });
-    
-    // Test the connection
-    const { data, error } = await supabase.from('users').select('count', { count: 'exact', head: true });
-    if (error && !error.message.includes('relation "users" does not exist')) {
-      throw error;
-    }
-    
-    dbConnected = true;
-    console.log("✅ Supabase connected successfully");
-    return true;
-  } catch (error) {
-    console.warn("⚠️  Supabase connection failed, falling back to in-memory storage:", error);
-    dbConnected = false;
-    return false;
-  }
-}
-
-// Initialize Supabase connection
-initializeSupabase();
-
 export interface IStorage {
   // User management
   getUser(id: string): Promise<User | undefined>;
@@ -112,9 +73,23 @@ export interface IStorage {
 
 // Supabase storage implementation
 export class SupabaseStorage implements IStorage {
+  private supabase: any;
+
+  constructor() {
+    const supabaseUrl = process.env.SUPABASE_URL!;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    
+    this.supabase = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    });
+  }
+
   // User management
   async getUser(id: string): Promise<User | undefined> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('users')
       .select('*')
       .eq('id', id)
@@ -130,7 +105,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('users')
       .select('*')
       .eq('email', email)
@@ -146,7 +121,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('users')
       .insert({
         email: insertUser.email,
@@ -175,7 +150,7 @@ export class SupabaseStorage implements IStorage {
     if (updates.twoFactorSecret !== undefined) updateData.two_factor_secret = updates.twoFactorSecret;
     if (updates.twoFactorEnabled !== undefined) updateData.two_factor_enabled = updates.twoFactorEnabled;
 
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('users')
       .update(updateData)
       .eq('id', id)
@@ -193,7 +168,7 @@ export class SupabaseStorage implements IStorage {
 
   // Contact messages
   async createContactMessage(insertMessage: InsertContactMessage): Promise<ContactMessage> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('contact_messages')
       .insert({
         name: insertMessage.name,
@@ -213,7 +188,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async getContactMessages(): Promise<ContactMessage[]> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('contact_messages')
       .select('*')
       .order('created_at', { ascending: false });
@@ -227,7 +202,7 @@ export class SupabaseStorage implements IStorage {
 
   // Skills
   async getSkills(): Promise<Skill[]> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('skills')
       .select('*')
       .order('order', { ascending: true })
@@ -243,7 +218,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async createSkill(skill: InsertSkill): Promise<Skill> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('skills')
       .insert({
         name: skill.name,
@@ -275,7 +250,7 @@ export class SupabaseStorage implements IStorage {
     if (skill.order !== undefined) updateData.order = skill.order;
     updateData.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('skills')
       .update(updateData)
       .eq('id', id)
@@ -292,7 +267,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async deleteSkill(id: string): Promise<boolean> {
-    const { error } = await supabase
+    const { error } = await this.supabase
       .from('skills')
       .delete()
       .eq('id', id);
@@ -302,7 +277,7 @@ export class SupabaseStorage implements IStorage {
 
   // Services
   async getServices(): Promise<Service[]> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('services')
       .select('*')
       .order('order', { ascending: true })
@@ -317,7 +292,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async createService(service: InsertService): Promise<Service> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('services')
       .insert({
         title: service.title,
@@ -348,7 +323,7 @@ export class SupabaseStorage implements IStorage {
     if (service.order !== undefined) updateData.order = service.order;
     updateData.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('services')
       .update(updateData)
       .eq('id', id)
@@ -364,7 +339,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async deleteService(id: string): Promise<boolean> {
-    const { error } = await supabase
+    const { error } = await this.supabase
       .from('services')
       .delete()
       .eq('id', id);
@@ -374,7 +349,7 @@ export class SupabaseStorage implements IStorage {
 
   // Projects
   async getProjects(): Promise<Project[]> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('projects')
       .select('*')
       .order('order', { ascending: true })
@@ -393,7 +368,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async getProject(id: string): Promise<Project | undefined> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('projects')
       .select('*')
       .eq('id', id)
@@ -412,7 +387,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async getProjectBySlug(slug: string): Promise<Project | undefined> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('projects')
       .select('*')
       .eq('title', slug)
@@ -431,7 +406,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async createProject(project: InsertProject): Promise<Project> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('projects')
       .insert({
         title: project.title,
@@ -476,7 +451,7 @@ export class SupabaseStorage implements IStorage {
     if (project.order !== undefined) updateData.order = project.order;
     updateData.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('projects')
       .update(updateData)
       .eq('id', id)
@@ -496,7 +471,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async deleteProject(id: string): Promise<boolean> {
-    const { error } = await supabase
+    const { error } = await this.supabase
       .from('projects')
       .delete()
       .eq('id', id);
@@ -506,7 +481,7 @@ export class SupabaseStorage implements IStorage {
 
   // Experiences
   async getExperiences(): Promise<Experience[]> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('experiences')
       .select('*')
       .order('order', { ascending: true })
@@ -521,7 +496,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async createExperience(experience: InsertExperience): Promise<Experience> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('experiences')
       .insert({
         period: experience.period,
@@ -556,7 +531,7 @@ export class SupabaseStorage implements IStorage {
     if (experience.order !== undefined) updateData.order = experience.order;
     updateData.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('experiences')
       .update(updateData)
       .eq('id', id)
@@ -572,7 +547,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async deleteExperience(id: string): Promise<boolean> {
-    const { error } = await supabase
+    const { error } = await this.supabase
       .from('experiences')
       .delete()
       .eq('id', id);
@@ -582,7 +557,7 @@ export class SupabaseStorage implements IStorage {
 
   // Blog posts
   async getBlogPosts(publishedOnly = false): Promise<BlogPost[]> {
-    let query = supabase.from('blog_posts').select('*');
+    let query = this.supabase.from('blog_posts').select('*');
     
     if (publishedOnly) {
       query = query.eq('published', true);
@@ -600,7 +575,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async getBlogPost(id: string): Promise<BlogPost | undefined> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('blog_posts')
       .select('*')
       .eq('id', id)
@@ -616,7 +591,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async getBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('blog_posts')
       .select('*')
       .eq('slug', slug)
@@ -632,7 +607,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async createBlogPost(post: InsertBlogPost): Promise<BlogPost> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('blog_posts')
       .insert({
         title: post.title,
@@ -670,7 +645,7 @@ export class SupabaseStorage implements IStorage {
     if (post.order !== undefined) updateData.order = post.order;
     updateData.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('blog_posts')
       .update(updateData)
       .eq('id', id)
@@ -687,7 +662,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async deleteBlogPost(id: string): Promise<boolean> {
-    const { error } = await supabase
+    const { error } = await this.supabase
       .from('blog_posts')
       .delete()
       .eq('id', id);
@@ -697,7 +672,7 @@ export class SupabaseStorage implements IStorage {
 
   // Newsletter subscribers
   async getNewsletterSubscribers(): Promise<NewsletterSubscriber[]> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('newsletter_subscribers')
       .select('*')
       .eq('is_active', true)
@@ -713,7 +688,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async createNewsletterSubscriber(subscriber: InsertNewsletterSubscriber): Promise<NewsletterSubscriber> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('newsletter_subscribers')
       .insert({
         email: subscriber.email,
@@ -733,7 +708,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async unsubscribeNewsletter(email: string): Promise<boolean> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('newsletter_subscribers')
       .update({
         is_active: false,
@@ -746,7 +721,7 @@ export class SupabaseStorage implements IStorage {
   }
 
   async isEmailSubscribed(email: string): Promise<boolean> {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('newsletter_subscribers')
       .select('id')
       .eq('email', email)
@@ -1148,13 +1123,22 @@ export class MemoryStorage implements IStorage {
   }
 }
 
-// Create storage instance with Supabase prioritized
+// Create storage instance 
 function createStorage(): IStorage {
-  if (dbConnected && supabase) {
-    console.log("🗄️  Using Supabase storage");
-    return new SupabaseStorage();
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (supabaseUrl && supabaseServiceKey) {
+    try {
+      console.log("🗄️  Using Supabase storage");
+      return new SupabaseStorage();
+    } catch (error) {
+      console.warn("⚠️  Failed to initialize Supabase storage:", error);
+      console.log("💾 Using in-memory storage (fallback)");
+      return new MemoryStorage();
+    }
   } else {
-    console.log("💾 Using in-memory storage");
+    console.log("💾 Using in-memory storage (no Supabase credentials)");
     return new MemoryStorage();
   }
 }
